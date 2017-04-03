@@ -106,7 +106,6 @@ function component(width, height, color, x, y, type) {
 function updateGameArea() {
     myGameArea.clear();
     if (myGamePiece.crashWith(myObstacle)) {
-        //Verificar si esta por encima, por debajo por el lado derecho o izquiero del obstaculo
         if((myGamePiece.y>myObstacle.y) && (myGamePiece.y<=myObstacle.y+myObstacle.height)){
             myGamePiece.speedY = 0;
         }else if((myGamePiece.y+myGamePiece.height<myObstacle.y+myObstacle.height) && (myGamePiece.y+myGamePiece.height>myObstacle.y)){
