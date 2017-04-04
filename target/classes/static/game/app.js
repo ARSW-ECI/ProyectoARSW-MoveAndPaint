@@ -2,6 +2,9 @@ var stompClient;
 var context;
 var myGamePiece;
 var obstacles = [];
+var direccion = null;
+var color = null;
+var coloresJugadores=null;
 
 function connect() {
     var socket = new SockJS('/stompendpoint');
@@ -20,7 +23,7 @@ function disconnect() {
 }
 
 function startGame() {
-    myGamePiece = new component(74, 74, "Sasuke1.png", 170, 170, "image");
+    myGamePiece = new component(74, 74, color + direccion +".png", 170, 170, "image");
     for (var i = 0; i < 5; i++) {
         obstacles.push(new component(50, 50, "green", i * 65, 545, "rectangle"));
     }
@@ -162,23 +165,33 @@ function move(dir) {
         myGamePiece.speedY = -4;
     }
     if (dir == "left") {
-        myGamePiece.image.src = "Sasuke3.png";
+        direccion = "Left";
+        myGamePiece.image.src = color + direccion +".png";
         myGamePiece.speedX = -5;
     }
     if (dir == "right") {
-        myGamePiece.image.src = "Sasuke2.png";
+        direccion = "Right";
+        myGamePiece.image.src = color + direccion +".png";
         myGamePiece.speedX = 5;
     }
 }
 
 function clearmove() {
-    myGamePiece.image.src = "Sasuke1.png";
+    myGamePiece.image.src = color + direccion +".png";
     myGamePiece.speedX = 0;
     myGamePiece.speedY = 0;
 }
 
 $(document).ready(
         function () {
+            direcciones=["Right","Left"];
+            var randomDireccion=Math.floor((Math.random() * 2) + 0);
+            direccion=direcciones[randomDireccion];
+            coloresJugadores=["rojo","azul","amarillo","verde","fantasma","morado","naranja"];
+            var coloresDisponibles= coloresJugadores.length;            
+            var randomcolor=Math.floor((Math.random() * coloresDisponibles) + 0);
+            color=coloresJugadores[randomcolor];
+            coloresJugadores.splice(randomcolor);
             document.addEventListener('keydown', function (event) {
                 keyCode = event.keyCode;
                 if (keyCode == 39) {
