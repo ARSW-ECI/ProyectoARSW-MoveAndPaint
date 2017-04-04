@@ -4,7 +4,7 @@ var myGamePiece;
 var obstacles = [];
 var direccion = null;
 var color = null;
-var coloresJugadores=null;
+var coloresJugadores = null;
 
 function connect() {
     var socket = new SockJS('/stompendpoint');
@@ -23,7 +23,7 @@ function disconnect() {
 }
 
 function startGame() {
-    myGamePiece = new component(74, 74, color + direccion +".png", 170, 170, "image");
+    myGamePiece = new component(74, 74, color + direccion + ".png", 170, 170, "image");
     for (var i = 0; i < 5; i++) {
         obstacles.push(new component(50, 50, "green", i * 65, 545, "rectangle"));
     }
@@ -166,47 +166,57 @@ function move(dir) {
     }
     if (dir == "left") {
         direccion = "Left";
-        myGamePiece.image.src = color + direccion +".png";
+        myGamePiece.image.src = color + direccion + ".png";
         myGamePiece.speedX = -5;
     }
     if (dir == "right") {
         direccion = "Right";
-        myGamePiece.image.src = color + direccion +".png";
+        myGamePiece.image.src = color + direccion + ".png";
         myGamePiece.speedX = 5;
     }
 }
 
 function clearmove() {
-    myGamePiece.image.src = color + direccion +".png";
+    myGamePiece.image.src = color + direccion + ".png";
     myGamePiece.speedX = 0;
     myGamePiece.speedY = 0;
 }
 
+function suscribir() {
+    direcciones = ["Right", "Left"];
+    var randomDireccion = Math.floor((Math.random() * 2) + 0);
+    direccion = direcciones[randomDireccion];
+    coloresJugadores = ["rojo", "azul", "amarillo", "verde", "fantasma", "morado", "naranja"];
+    var coloresDisponibles = coloresJugadores.length;
+    var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
+    color = coloresJugadores[randomcolor];
+    coloresJugadores.splice(randomcolor);
+    $("#estilo").append("canvas {\n\
+    height: 50%;\n\
+    width: 50%;\n\
+    border:1px solid #d3d3d3;\n\
+    background-color: #f1f1f1;}");
+    $("#formulario").remove();
+    document.addEventListener('keydown', function (event) {
+        keyCode = event.keyCode;
+        if (keyCode == 39) {
+            move('right')
+        }
+        if (keyCode == 37) {
+            move('left')
+        }
+        if (keyCode == 38 || keyCode == 32) {
+            move('up')
+        }
+    }, false);
+    document.addEventListener('keyup', function (event) {
+        clearmove();
+    }, false);
+    startGame();
+}
+
 $(document).ready(
         function () {
-            direcciones=["Right","Left"];
-            var randomDireccion=Math.floor((Math.random() * 2) + 0);
-            direccion=direcciones[randomDireccion];
-            coloresJugadores=["rojo","azul","amarillo","verde","fantasma","morado","naranja"];
-            var coloresDisponibles= coloresJugadores.length;            
-            var randomcolor=Math.floor((Math.random() * coloresDisponibles) + 0);
-            color=coloresJugadores[randomcolor];
-            coloresJugadores.splice(randomcolor);
-            document.addEventListener('keydown', function (event) {
-                keyCode = event.keyCode;
-                if (keyCode == 39) {
-                    move('right')
-                }
-                if (keyCode == 37) {
-                    move('left')
-                }
-                if (keyCode == 38 || keyCode == 32) {
-                    move('up')
-                }
-            }, false);
-            document.addEventListener('keyup', function (event) {
-                clearmove();
-            }, false);
-            startGame();
+
         }
 );

@@ -2,20 +2,54 @@
 
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Move and paint</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="styles.css">
         <script src="/webjars/jquery/jquery.min.js"></script>
         <script src="/webjars/sockjs-client/sockjs.min.js"></script>
         <script src="/webjars/stomp-websocket/stomp.min.js"></script>
         <script src="/game/app.js"></script>
-        <style>
-            canvas {
-                border:1px solid #d3d3d3;
-                background-color: #f1f1f1;
-            }
+
+        <style id="estilo">
         </style>
     </head>
-    <body>
+    <body id="cuerpo">
+        <div id="titulo">
+            Move and paint
+        </div>
+        <div id="formulario" class="formulario">
+            <br><br>
+            Nombre de usuario:<br>
+            <input type="text" name="user" value="">
+            <br><br>
+            Nombre:<br>
+            <input type="password" name="pass" value="">
+            <br><br>
+            Correo electrónico:<br>
+            <input type="password" name="pass" value="">
+            <br><br>
+            Contraseña:<br>
+            <input type="password" name="pass" value="">
+            <br><br>
+            Confirmar contraseña<br>
+            <input type="password" name="pass" value="">
+            <br><br>
+            <button id="suscribir"  onclick="suscribir()">Registrarse</button>
+        </div> 
+        <div id="wrapper">
+            <div id="menu">
+                <p class="welcome">Welcome, <b></b></p>
+                <p class="logout"><a id="exit" href="#">Exit Chat</a></p>
+                <div style="clear:both"></div>
+            </div>
+
+            <div id="chatbox"></div>
+
+            <form name="message" action="">
+                <input name="usermsg" type="text" id="usermsg"  />
+                <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+            </form>
+        </div>
     </body>
 </html>
