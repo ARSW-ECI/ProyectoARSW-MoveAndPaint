@@ -23,19 +23,61 @@ function disconnect() {
 }
 
 function startGame() {
-    myGamePiece = new component(74, 74, color + direccion + ".png", 170, 170, "image");
-    for (var i = 0; i < 5; i++) {
-        obstacles.push(new component(50, 50, "green", i * 65, 545, "rectangle"));
+    myGamePiece = new component(50, 50, color + direccion + ".png", 170, 170, "image");
+    
+    //Floor
+    for (var i = 0; i < 22; i++) {
+        obstacles.push(new component(50, 50, "caja.png", i * 50, 600, "image"));
     }
 
+    //Left wall
+    for (var i = 0; i < 13; i++) {
+        obstacles.push(new component(50, 50, "caja.png", 0, 50 * i, "image"));
+    }
+
+    //Right wall
+    for (var i = 0; i < 13; i++) {
+        obstacles.push(new component(50, 50, "caja.png", 1100, 50 * i, "image"));
+    }
+    
+    //Platform Lvl 1
+    for (var i = 3; i < 7; i++) {
+        obstacles.push(new component(50, 50, "caja.png", 50 * i, 450, "image"));
+        obstacles.push(new component(50, 50, "caja.png", 1100 - 50 * i, 450, "image"));
+    }
+    
+    obstacles.push(new component(50, 50, "caja.png", 450, 450, "image"));
+    obstacles.push(new component(50, 50, "caja.png", 650, 450, "image"));
+    
+    obstacles.push(new component(50, 50, "caja.png", 500, 400, "image"));
+    obstacles.push(new component(50, 50, "caja.png", 600, 400, "image"));
+
+    obstacles.push(new component(50, 50, "caja.png", 550, 350, "image"));
+
+    for (var i = 1; i < 4; i++) {
+        obstacles.push(new component(50, 50, "caja.png", 50 * i, 300, "image"));
+        obstacles.push(new component(50, 50, "caja.png", 1100 - (50 * i), 300, "image"));
+
+    }
+
+    for (var i = 0; i < 11; i++) {
+        obstacles.push(new component(50, 50, "caja.png", 300 + (50 * i), 150, "image"));
+        obstacles.push(new component(50, 50, "caja.png", 300 + (50 * i), 150, "image"));
+    }
+    
+    for (var i = 0 ; i < 2 ; i++) {
+        obstacles.push(new component(50, 50, "caja.png",50 + (50*i), 100 + (50*i), "image"));
+        obstacles.push(new component(50, 50, "caja.png", 1100 - (50 + (50*i)), 100 + (50*i), "image"));
+        
+    }
     myGameArea.start();
 }
 
 var myGameArea = {
     canvas: document.createElement("canvas"),
     start: function () {
-        this.canvas.width = 1024;
-        this.canvas.height = 600;
+        this.canvas.width = 1150;
+        this.canvas.height = 650;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
@@ -54,6 +96,7 @@ function component(width, height, color, x, y, type) {
         this.image = new Image();
         this.image.src = color;
     }
+    
     this.width = width;
     this.height = height;
     this.x = x;
@@ -61,10 +104,11 @@ function component(width, height, color, x, y, type) {
     this.speedX = 0;
     this.speedY = 0;
     this.grounded = false; //inicia flase si el jugador esta en el aire sino true
-    this.gravity = 0.05;
+    this.gravity = 0.1;
     this.gravitySpeed = 0;
     this.friction = 0.8;
     this.jumping = true; //inicia saltando valor true sino false
+    
     this.update = function () {
         ctx = myGameArea.context;
         if (type == "image") {
@@ -83,6 +127,7 @@ function component(width, height, color, x, y, type) {
         this.x += this.speedX;
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
+        this.hitup();
     }
 
     this.hitBottom = function () {
@@ -94,12 +139,20 @@ function component(width, height, color, x, y, type) {
             this.grounded = true;
         }
     }
+    
+    this.hitup = function () {
+        if (this.y < 0) {
+            this.y = 0;
+        }
+    }
 }
 
 function updateGameArea() {
     myGameArea.clear();
     myGamePiece.newPos();
     myGamePiece.update();
+    
+    myGamePiece.grounded = false;
     for (var i = 0; i < obstacles.length; i++) {
         obstacles[i].update();
         var dir = colCheck(myGamePiece, obstacles[i]);
@@ -162,7 +215,7 @@ function move(dir) {
     if (dir == "up" && !myGamePiece.jumping && myGamePiece.grounded) {
         myGamePiece.jumping = true;
         myGamePiece.grounded = false;
-        myGamePiece.speedY = -4;
+        myGamePiece.speedY = -7;
     }
     if (dir == "left") {
         direccion = "Left";
@@ -217,6 +270,36 @@ function suscribir() {
 
 $(document).ready(
         function () {
+            direcciones = ["Right", "Left"];
+    var randomDireccion = Math.floor((Math.random() * 2) + 0);
+    direccion = direcciones[randomDireccion];
+    coloresJugadores = ["rojo", "azul", "amarillo", "verde", "fantasma", "morado", "naranja"];
+    var coloresDisponibles = coloresJugadores.length;
+    var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
+    color = coloresJugadores[randomcolor];
+    coloresJugadores.splice(randomcolor);
+  /* $("#estilo").append("canvas {\n\
+    height: 50%;\n\
+    width: 50%;\n\
+    border:1px solid #d3d3d3;\n\
+    background-color: #f1f1f1;}");
+    $("#formulario").remove();*/
+    document.addEventListener('keydown', function (event) {
+        keyCode = event.keyCode;
+        if (keyCode == 39) {
+            move('right')
+        }
+        if (keyCode == 37) {
+            move('left')
+        }
+        if (keyCode == 38 || keyCode == 32) {
+            move('up')
+        }
+    }, false);
+    document.addEventListener('keyup', function (event) {
+        clearmove();
+    }, false);
+    startGame();
 
         }
 );
