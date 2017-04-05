@@ -291,7 +291,7 @@ $(document).ready(
              color = coloresJugadores[randomcolor];
              coloresJugadores.splice(randomcolor);
              $("#estilo").append("canvas {\n\
-             height: 80%;\n\
+             height: 9%;\n\
              width: 98%;\n\
              border:1px solid #d3d3d3;\n\
              background-color: #f1f1f1;}");

@@ -1,4 +1,5 @@
 var stompClient;
+var participante;
 
 function Login() {
     var done = 0;
