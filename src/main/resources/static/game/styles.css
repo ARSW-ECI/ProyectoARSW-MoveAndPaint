@@ -1,30 +1,83 @@
 .formulario{
-    padding-top: 10%;
-    border-style: solid;
-    border-color: #EBF4FB;
-    text-align: center;
-    position: absolute;
-    height: 95vh;
-    min-width: 50%;
-}
-
-.formulario2{
-    padding-top: 10%;
-    border-style: solid;
-    border-color: #EBF4FB;
-    height: 95vh;
-    text-align: center;
-    float: right;
-    width: 48%;
+    font: 150% sans-serif;
+    border: 1px solid #CED5D7;
+    border-radius: 6px;
+    padding: 45px 45px 20px;
+    margin:auto;
+    color:white;
+    height: 50vh;
+    box-shadow: 0px 5px 10px #B5C1C5, 0 0 0 10px #EEF5F7 inset;
+    width: 45%;
+    float:left;
+    
     
 }
 
+.formulario label{
+    display: block; /* esto es para que el label se sobreponga a la caja de texto */
+    font-weight: bold;
+}
+
+.formulario div{
+    margin-bottom: 15px; /* esto los separara un poco */
+}
+
+
+
+
+.button
+{
+    border: 1px solid #DBE1EB;
+    font-size: 100%;
+    font-family: Arial, Verdana;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    background: #4972B5;
+    background: linear-gradient(left, #4972B5, #618ACB);
+    background: -moz-linear-gradient(left, #4972B5, #618ACB);
+    background: -webkit-linear-gradient(left, #4972B5, #618ACB);
+    background: -o-linear-gradient(left, #4972B5, #618ACB);
+    color: #FFFFFF;
+}
+
+.button:hover
+{
+    background: #365D9D;
+    background: linear-gradient(left, #365D9D, #436CAD);
+    background: -moz-linear-gradient(left, #365D9D, #436CAD);
+    background: -webkit-linear-gradient(left, #365D9D, #436CAD);
+    background: -o-linear-gradient(left, #365D9D, #436CAD);
+    color: #FFFFFF;
+    border-color: #FBFFAD;
+}
+
+.formulario2{
+    color: white;
+    padding-top: 10%;
+    border-style: solid;
+    border-color: #EBF4FB;
+    height: 30vh;
+    text-align: center;
+    float: right;
+    width: 48%;
+
+}
+
 #titulo{
-  text-align: center;
-  font: 300% sans-serif;
-  margin: 10px 10px 4% 80px;
-  border-bottom-style: solid;
-  border-height: 10;
+    color:white;
+    padding-top: 5%;
+    text-align: center;
+    font: 400% sans-serif;
+    margin: 10px 10px 4% 80px;
+}
+.texto{
+    font: 100% sans-serif;
 }
 
 .canvas{
@@ -37,11 +90,11 @@ input,button{
 }
 
 body {
-    
+    background-image: url("fondo1.png");
     font:23px arial;
     color: black;
     text-align:center;
-     }
+}
 
 form, p, span {
     margin:0;

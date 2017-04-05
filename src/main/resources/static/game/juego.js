@@ -12,6 +12,7 @@ var obstacles = [];
 var direccion = null;
 var color = null;
 var coloresJugadores = null;
+var fondo;
 
 function connect() {
     var socket = new SockJS('/stompendpoint');
@@ -31,6 +32,7 @@ function disconnect() {
 
 function startGame() {
     myGamePiece = new component(50, 50, color + direccion + ".png", 170, 170, "image");
+    fondo=new component(1150, 650, "fondo1.png", 0, 0, "image");
 
     //Floor
     for (var i = 0; i < 22; i++) {
@@ -86,6 +88,7 @@ var myGameArea = {
         this.canvas.width = 1150;
         this.canvas.height = 650;
         this.context = this.canvas.getContext("2d");
+        
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
     },
@@ -255,7 +258,7 @@ function suscribir() {
              height: 50%;\n\
              width: 50%;\n\
              border:1px solid #d3d3d3;\n\
-             background-color: #f1f1f1;}");
+             background-color: #618ACB;}");
     $("#formulario").remove();
     document.addEventListener('keydown', function (event) {
         keyCode = event.keyCode;
@@ -291,8 +294,8 @@ $(document).ready(
              color = coloresJugadores[randomcolor];
              coloresJugadores.splice(randomcolor);
              $("#estilo").append("canvas {\n\
-             height: 9%;\n\
-             width: 98%;\n\
+             height: 80%;\n\
+             width: 80%;\n\
              border:1px solid #d3d3d3;\n\
              background-color: #f1f1f1;}");
              $("#formulario").remove();
