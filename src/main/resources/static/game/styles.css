@@ -1,8 +1,22 @@
 .formulario{
+    padding-top: 10%;
+    border-style: solid;
+    border-color: #EBF4FB;
     text-align: center;
     position: absolute;
     height: 95vh;
     min-width: 50%;
+}
+
+.formulario2{
+    padding-top: 10%;
+    border-style: solid;
+    border-color: #EBF4FB;
+    height: 95vh;
+    text-align: center;
+    float: right;
+    width: 48%;
+    
 }
 
 #titulo{

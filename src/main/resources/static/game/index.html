@@ -19,25 +19,30 @@
         <div id="titulo">
             Move and paint
         </div>
-        <div id="formulario" class="formulario">
-            <br><br>
-            Nombre de usuario:<br>
-            <input type="text" name="user" value="">
-            <br><br>
-            Nombre:<br>
-            <input type="password" name="pass" value="">
-            <br><br>
-            Correo electrónico:<br>
-            <input type="password" name="pass" value="">
-            <br><br>
-            Contraseña:<br>
-            <input type="password" name="pass" value="">
-            <br><br>
-            Confirmar contraseña<br>
-            <input type="password" name="pass" value="">
-            <br><br>
-            <button id="suscribir"  onclick="suscribir()">Registrarse</button>
-        </div> 
+        <form name=login class="formulario"> 
+            Usuario: <input type=text name=username> 
+            <br>
+            Contrase&ntilde;a: <input type=password name=password> 
+            <input type=button value="Entrar" onClick="Login()"> 
+        </form> 
+        <form action="juego.html" onsubmit="return registrar(this);" class="formulario2">
+            Registrar nuevo usuario
+            <br>
+            <p>Nombre Usuario:
+                <input type="text" name="usuario" value="" />
+                <br>
+                Clave:
+                <input type="password" name="password" maxlength="8" value="" />
+            </p>
+            <p>Repite tu clave:
+                <input type="password" name="password2" maxlength="8" value="" />
+                <br>
+                <BR>
+            </p>
+            <p><input type="submit" value="Enviar datos" name="enviar" />
+        </form>
+
+        <!--
         <div id="wrapper">
             <div id="menu">
                 <p class="welcome">Welcome, <b></b></p>
@@ -51,6 +56,6 @@
                 <input name="usermsg" type="text" id="usermsg"  />
                 <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
             </form>
-        </div>
+        </div> -->
     </body>
 </html>
