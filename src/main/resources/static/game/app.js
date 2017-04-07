@@ -3,11 +3,22 @@ var participante;
 
 function Login() {
     var done = 0;
-    var username = document.login.username.value;
-    username = username.toLowerCase();
-    var password = document.login.password.value;
-    password = password.toLowerCase();
-    if (username == "carlos" && password == "1234") {
+    var username = document.getElementById("nombre").value;
+    
+        $.get("/games/participants", function (data) {
+            
+            console.log(data);
+            
+        for (x in data) {
+            if (data.color == username) {
+                var kk = x;
+                alert(kk);
+            }
+        }
+    });
+    
+    /*
+    if (data == "carlos") {
         window.location = "juego.html";
         done = 1;
         suscribir();
@@ -16,36 +27,34 @@ function Login() {
     if (done == 0) {
         window.location = "index.html";
         window.alert("Ingreso fallido");
+    }*/
+}
+function registrar() {
+    alert("esta en regstro");
+
+    var nombre = document.getElementById("usuario").value;
+    var pass = document.getElementById("password").value;
+    if (nombre == "" || pass == "") {
+        alert("llene todos los campos");
+    } else {
+        var jugador = {
+            "posX": 0,
+            "posY": 0,
+            "color": nombre
+        };
+        
+        $.ajax({
+            url: "/games/1/participants",
+            type: 'PUT',
+            data: JSON.stringify(jugador),
+            contentType: "application/json"
+        });
+        alert("Sus datos han sido Registrados   " + nombre + "GRACIAS");
+        window.location = "juego.html";
+    
     }
 }
-function registrar(form) {
 
-    if (form.usuario.value == "") {
-        alert("Debe igresar un nombre de usuario");
-        //form.usuario.focus();
-        return false;
-    }
-    if (form.password.value == "") {
-        alert("Debe igresar una clave");
-       // form.password.focus();
-        return false;
-    }
-    if (form.password2.value == "") {
-        alert("Debe verificar la contraseña");
-        //form.password2.focus();
-        return false;
-    }
-    if (form.password.value != form.password2.value) {
-        alert("Las 2 contraseñas no coniciden");
-        //form.password.focus();
-        return false;
-    }
-    window.alert("Usuario registrado");
-    suscribir();
-    return true;
-
-
-}
 
 
 $(document).ready(

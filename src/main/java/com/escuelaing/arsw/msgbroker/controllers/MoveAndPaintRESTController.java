@@ -32,11 +32,11 @@ public class MoveAndPaintRESTController {
     
     
     
-    @RequestMapping(path = "/{numeroSala}/participants",method = RequestMethod.GET)
-    public ResponseEntity<?> getRaceParticipantsNums(@PathVariable(name = "numeroSala") String numeroSala) {
+    @RequestMapping(path = "/participants",method = RequestMethod.GET)
+    public ResponseEntity<?> getRaceParticipantsNums() {
         
         try {
-            return new ResponseEntity<>(services.getRegisteredPlayers(Integer.parseInt(numeroSala)),HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(services.getRegisteredPlayers(),HttpStatus.ACCEPTED);
         } catch (ServicesException ex) {
             Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getLocalizedMessage(),HttpStatus.NOT_FOUND);
@@ -46,19 +46,21 @@ public class MoveAndPaintRESTController {
         }
     }
     
-
-    @RequestMapping(path = "/{numeroSala}/participants",method = RequestMethod.PUT)
-    public ResponseEntity<?> addParticipantNum(@PathVariable(name = "numeroSala") String numeroSala,@RequestBody Jugador jugadorMovePaint) {
+    
+    
+    
+        @RequestMapping(value = "/{numeroSala}/participants", method = RequestMethod.PUT)
+    public ResponseEntity<?> addParticipantNum(@PathVariable(name = "numeroSala") String numeroSala, @RequestBody Jugador user) {
+            System.out.println("APIREST"+user.getColor());
         try {
-            services.registerPlayerToGame(Integer.parseInt(numeroSala), jugadorMovePaint);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (ServicesException ex) {
+            //registrar dato
+            services.registerPlayerToGame(Integer.parseInt(numeroSala), user);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
             Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getLocalizedMessage(),HttpStatus.BAD_REQUEST);
-        } catch (NumberFormatException ex){
-            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("/{numeroSala}/ must be an integer value.",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error bla bla bla", HttpStatus.FORBIDDEN);
         }
-
     }
+    
+
 }

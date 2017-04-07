@@ -23,28 +23,29 @@
             <label>Iniciar sesión</label>
             <br>
             <label>Usuario:</label>
-            <input type=text name=username class="texto"> 
+            <input type=text name=username id="nombre" class="texto"> 
             <br>
             <label>Contrase&ntilde;a:</label>
             <input type=password name=password class="texto"> 
             <br><br>
             <input type=button class="button" value="Entrar" onClick="Login()"> 
         </form> 
-        <form action="juego.html" onsubmit="return registrar(this);" class="formulario">
-            <label>Registrar nuevo usuario</label>
+<form  class="formulario2">
+            Registrar nuevo usuario
             <br>
-            <p><label>Nombre Usuario:</label>
-                <input type="text" name="usuario" class="texto" value="" />
+            <p>Nombre Usuario:
+                <input id="usuario" type="text"/>
                 <br>
-                <label>Clave:</label>
-                <input type="password"  name="password" class="texto" maxlength="8" value="" />
+                Clave:
+                <input id="password" type="password"  maxlength="8"  />
             </p>
-            <p><label>Repite tu clave:</label>
-                <input type="password"  name="password2" class="texto" maxlength="8" value="" />
+            <p>Repite tu clave:
+                <input id="password2" type="password"  maxlength="8"  />
                 <br>
                 <BR>
             </p>
-            <p><input type="submit" class="button" class="texto" value="Enviar datos" name="enviar" />
+            <input type=button class="button" value="Entrar" onClick="registrar()"> 
+           <!-- <p><input type="submit" value="Enviar datos" name="enviar" />-->
         </form>
 
         <!--
