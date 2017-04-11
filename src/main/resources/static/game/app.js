@@ -1,64 +1,83 @@
 var stompClient;
-var participante;
+var username;
+var password;
+var roomid;
+
+function connect() {
+    var socket = new SockJS('/stompendpoint');
+    stompClient = Stomp.over(socket);
+    
+    stompClient.connect({}, function (frame) {
+        console.log('/topic/login.' + roomid);
+        stompClient.subscribe('/topic/login.' + roomid,function (data) {
+            window.location = "juego.html";
+        });
+    });
+}
+
+function disconnect() {
+    if (stompClient != null) {
+        stompClient.disconnect();
+    }
+    console.log("Disconnected");
+}
 
 function Login() {
-    var done = 0;
-    var username = document.getElementById("nombre").value;
+    username = document.getElementById("nombre").value;
+    password = document.getElementById("passwordlogin").value;
     
-        $.get("/games/participants", function (data) {
-            
+    if (username == "" || password == "" || roomid == "") {
+        alert("LLENE TODOS LOS CAMPOS!!");
+    } else {
+        $.get("/games/"+username+"/participants", function (data) {
             console.log(data);
-            
-        for (x in data) {
-            if (data.color == username) {
-                var kk = x;
-                alert(kk);
+            if(data!=null){ 
+                stompClient.send("/app/" + roomid+"/inRoom", {}, JSON.stringify(data));
             }
-        }
-    });
-    
-    /*
-    if (data == "carlos") {
-        window.location = "juego.html";
-        done = 1;
-        suscribir();
-        window.alert("Ingreso correcto");
+        });
     }
-    if (done == 0) {
-        window.location = "index.html";
-        window.alert("Ingreso fallido");
-    }*/
 }
-function registrar() {
-    alert("esta en regstro");
 
+function registrar() {
     var nombre = document.getElementById("usuario").value;
+    var email = document.getElementById("email").value;
     var pass = document.getElementById("password").value;
-    if (nombre == "" || pass == "") {
-        alert("llene todos los campos");
+    if (nombre == "" || pass == "" || pass == "") {
+        alert("LLENE TODOS LOS CAMPOS!!");
     } else {
         var jugador = {
+            "name": nombre,
             "posX": 0,
             "posY": 0,
-            "color": nombre
+            "color": "",
+            "email": email
         };
-        
-        $.ajax({
-            url: "/games/1/participants",
-            type: 'PUT',
+
+        var postPromise = $.ajax({
+            url: "/games/participants",
+            type: 'POST',
             data: JSON.stringify(jugador),
             contentType: "application/json"
         });
-        alert("Sus datos han sido Registrados   " + nombre + "GRACIAS");
-        window.location = "juego.html";
-    
+
+        postPromise.then(
+                function () {
+                    console.info("OK");
+                    alert("SUS DATOS HAN SIDO REGISTRADOS CORRECTAMENTE!!");
+
+                },
+                function () {
+                    console.info("ERROR");
+                    alert("HUBO UN ERROR AL REGISTRAR EL JUGADOR, DATOS ERRONEOS O USUARIO EXISTENTE!!");
+                }
+        );
     }
 }
-
 
 
 $(document).ready(
         function () {
-           
+            roomid = document.getElementById("room").value;
+            connect();
         }
 );

@@ -3,22 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
-var stompClient;
+var stompClient = null;
 var context;
-var myGamePiece;
 var obstacles = [];
-var direccion = null;
-var color = null;
-var coloresJugadores = null;
 var fondo;
+
+//Player Data
+var myGamePiece;
+var color = null;
+var direccion = null;
+
+//Rivals Data
+var competitors = [];
 
 function connect() {
     var socket = new SockJS('/stompendpoint');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/myCharacter', function (data) {
+            var myInstruction = JSON.parse(data.body);
+            console.log(myInstruction.keyboard);
+            if (myInstruction.keyboard == 39) {
+                move('right')
+            }
+            if (myInstruction.keyboard == 37) {
+                move('left')
+            }
+            if (myInstruction.keyboard == 38 || myInstruction.keyboard == 32) {
+                move('up')
+            }
+        });
     });
 }
 
@@ -30,9 +45,10 @@ function disconnect() {
     console.log("Disconnected");
 }
 
+
 function startGame() {
     myGamePiece = new component(50, 50, color + direccion + ".png", 170, 170, "image");
-    fondo=new component(1150, 650, "fondo1.png", 0, 0, "image");
+    fondo = new component(1150, 650, "fondo1.png", 0, 0, "image");
 
     //Floor
     for (var i = 0; i < 22; i++) {
@@ -88,7 +104,7 @@ var myGameArea = {
         this.canvas.width = 1150;
         this.canvas.height = 650;
         this.context = this.canvas.getContext("2d");
-        
+
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
     },
@@ -106,7 +122,6 @@ function component(width, height, color, x, y, type) {
         this.image = new Image();
         this.image.src = color;
     }
-
     this.width = width;
     this.height = height;
     this.x = x;
@@ -122,10 +137,7 @@ function component(width, height, color, x, y, type) {
     this.update = function () {
         ctx = myGameArea.context;
         if (type == "image") {
-            ctx.drawImage(this.image,
-                    this.x,
-                    this.y,
-                    this.width, this.height);
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -176,12 +188,15 @@ function updateGameArea() {
         } else if (dir === "t") {
             myGamePiece.speedY *= -1;
         }
-
     }
 
     if (myGamePiece.grounded) {
         myGamePiece.speedY = 0;
         myGamePiece.gravitySpeed = 0;
+    }
+    
+    for(var j = 0 ; j < competitors ; j++){
+        competitors[j].update();
     }
 }
 
@@ -239,82 +254,42 @@ function move(dir) {
     }
 }
 
-function clearmove() {
-    myGamePiece.image.src = color + direccion + ".png";
-    myGamePiece.speedX = 0;
-    myGamePiece.speedY = 0;
+function clearmove(myCharacter) {
+    myCharacter.image.src = color + direccion + ".png";
+    myCharacter.speedX = 0;
+    myCharacter.speedY = 0;
 }
-
-function suscribir() {
-    direcciones = ["Right", "Left"];
-    var randomDireccion = Math.floor((Math.random() * 2) + 0);
-    direccion = direcciones[randomDireccion];
-    coloresJugadores = ["rojo", "azul", "amarillo", "verde", "fantasma", "morado", "naranja"];
-    var coloresDisponibles = coloresJugadores.length;
-    var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
-    color = coloresJugadores[randomcolor];
-    coloresJugadores.splice(randomcolor);
-    $("#estilo").append("canvas {\n\
-             height: 50%;\n\
-             width: 50%;\n\
-             border:1px solid #d3d3d3;\n\
-             background-color: #618ACB;}");
-    $("#formulario").remove();
-    document.addEventListener('keydown', function (event) {
-        keyCode = event.keyCode;
-        if (keyCode == 39) {
-            move('right')
-        }
-        if (keyCode == 37) {
-            move('left')
-        }
-        if (keyCode == 38 || keyCode == 32) {
-            move('up')
-        }
-    }, false);
-    document.addEventListener('keyup', function (event) {
-        clearmove();
-    }, false);
-    startGame();
-}
-
-
-
-
 
 $(document).ready(
         function () {
+            connect();
+
+            direcciones = ["Right", "Left"];
+            var randomDireccion = Math.floor((Math.random() * 2) + 0);
+            direccion = direcciones[randomDireccion];
+            var coloresJugadores = ["rojo", "azul", "amarillo", "verde", "fantasma", "morado", "naranja"];
+            var coloresDisponibles = coloresJugadores.length;
+            var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
+            color = coloresJugadores[randomcolor];
             
-             direcciones = ["Right", "Left"];
-             var randomDireccion = Math.floor((Math.random() * 2) + 0);
-             direccion = direcciones[randomDireccion];
-             coloresJugadores = ["rojo", "azul", "amarillo", "verde", "fantasma", "morado", "naranja"];
-             var coloresDisponibles = coloresJugadores.length;
-             var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
-             color = coloresJugadores[randomcolor];
-             coloresJugadores.splice(randomcolor);
-             $("#estilo").append("canvas {\n\
-             height: 80%;\n\
-             width: 80%;\n\
-             border:1px solid #d3d3d3;\n\
-             background-color: #f1f1f1;}");
-             $("#formulario").remove();
-             document.addEventListener('keydown', function (event) {
-             keyCode = event.keyCode;
-             if (keyCode == 39) {
-             move('right')
-             }
-             if (keyCode == 37) {
-             move('left')
-             }
-             if (keyCode == 38 || keyCode == 32) {
-             move('up')
-             }
-             }, false);
-             document.addEventListener('keyup', function (event) {
-             clearmove();
-             }, false);
-             startGame();
-             
+
+            $("#estilo").append("canvas {\n\
+            height: 80%;\n\
+            width: 80%;\n\
+            border:1px solid #d3d3d3;\n\
+            background-color: #f1f1f1;}");
+            $("#formulario").remove();
+
+            document.addEventListener('keydown', function (event) {
+                keyCode = event.keyCode;
+                stompClient.send('/topic/myCharacter', {}, JSON.stringify({keyboard: keyCode}));
+
+            }, false);
+            document.addEventListener('keyup', function (event) {
+                clearmove(myGamePiece);
+            }, false);
+            
+            startGame();
+
         }
 );

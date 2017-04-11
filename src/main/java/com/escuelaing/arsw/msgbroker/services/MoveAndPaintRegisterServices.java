@@ -6,16 +6,15 @@
 package com.escuelaing.arsw.msgbroker.services;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
-import java.util.List;
 import java.util.Set;
 
 /**
  *
  * @author Carlos
  */
-public interface MoveAndPaintServices {
-     public void registerPlayerToGame(int numeroSala, Jugador jugadorMovePaint) throws ServicesException;
-     public List<Jugador> getRegisteredPlayers()throws ServicesException;
+public interface MoveAndPaintRegisterServices {
     
-   
+    public void registerPlayer(Jugador jugadorMovePaint) throws ServicesException;
+    public Set<Jugador> getPlayerRegistered() throws ServicesException;
+    public Jugador getPlayerRegistered(String username)throws ServicesException;
 }

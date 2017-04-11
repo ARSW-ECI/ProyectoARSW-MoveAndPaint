@@ -9,28 +9,21 @@ package com.escuelaing.arsw.msgbroker.model;
  *
  * @author Carlos
  */
-public class Jugador {
-    int posX;
-    int posY;
-    String color;
+public class Jugador implements Comparable<Jugador>{
+    int posX,posY;
+    String color,name,email;
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-    
-    public Jugador(int posX, int posY, String color) {
+    public Jugador(int posX, int posY, String color, String name, String email) {
         this.posX = posX;
         this.posY = posY;
-        this.color=color;
+        this.color = color;
+        this.name = name;
+        this.email = email;
     }
+
     public Jugador() {
         
     }
-
 
     public int getPosX() {
         return posX;
@@ -48,7 +41,36 @@ public class Jugador {
         this.posY = posY;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
     
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }    
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
     
+    @Override
+    public int compareTo(Jugador o) {
+        if(o.getName().equals(this.getName())){
+            return 0;
+        }
+        return 1;
+    }
     
 }

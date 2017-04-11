@@ -6,7 +6,7 @@
 package com.escuelaing.arsw.msgbroker.controllers;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
-import com.escuelaing.arsw.msgbroker.services.MoveAndPaintServices;
+import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRegisterServices;
 import com.escuelaing.arsw.msgbroker.services.ServicesException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,41 +26,40 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/games")
 public class MoveAndPaintRESTController {
-    
+
     @Autowired
-    MoveAndPaintServices services;
+    MoveAndPaintRegisterServices services;
     
-    
-    
-    @RequestMapping(path = "/participants",method = RequestMethod.GET)
-    public ResponseEntity<?> getRaceParticipantsNums() {
-        
+    @RequestMapping(path = "/participants", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllParticipants() {
         try {
-            return new ResponseEntity<>(services.getRegisteredPlayers(),HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(services.getPlayerRegistered(), HttpStatus.ACCEPTED);
         } catch (ServicesException ex) {
             Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getLocalizedMessage(),HttpStatus.NOT_FOUND);
-        } catch (NumberFormatException ex){
-            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("/{numeroSala}/ must be an integer value.",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
         }
     }
     
     
-    
-    
-        @RequestMapping(value = "/{numeroSala}/participants", method = RequestMethod.PUT)
-    public ResponseEntity<?> addParticipantNum(@PathVariable(name = "numeroSala") String numeroSala, @RequestBody Jugador user) {
-            System.out.println("APIREST"+user.getColor());
+    @RequestMapping(path = "/{username}/participants", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllParticipants(@PathVariable String username) {
         try {
-            //registrar dato
-            services.registerPlayerToGame(Integer.parseInt(numeroSala), user);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        } catch (Exception ex) {
+            return new ResponseEntity<>(services.getPlayerRegistered(username), HttpStatus.ACCEPTED);
+        } catch (ServicesException ex) {
             Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("Error bla bla bla", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
+        }
+    }  
+    
+    @RequestMapping(value = "/participants", method = RequestMethod.POST)
+    public ResponseEntity<?> addParticipantDataBase(@RequestBody Jugador user) {
+        try {
+            services.registerPlayer(user);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (ServicesException ex) {
+            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.FORBIDDEN);
         }
     }
-    
 
 }
