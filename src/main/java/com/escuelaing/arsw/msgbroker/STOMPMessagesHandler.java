@@ -35,7 +35,6 @@ public class STOMPMessagesHandler {
     public void postNewPlayerInRoom(@DestinationVariable int idRoom, Jugador player) throws Exception {
         boolean registro = services.registerPlayerRoom(idRoom, player);
         if(registro){
-            System.out.println("3ntrelnlfsdn");
             //asignacion de jugadores posicion, personaje
             msgt.convertAndSend("/topic/login."+idRoom,player);
         }

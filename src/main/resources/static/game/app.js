@@ -16,6 +16,7 @@ function connect() {
 }
 
 function disconnect() {
+    
     if (stompClient != null) {
         stompClient.disconnect();
     }
@@ -29,6 +30,7 @@ function Login() {
     if (username == "" || password == "" || roomid == "") {
         alert("LLENE TODOS LOS CAMPOS!!");
     } else {
+        localStorage.setItem('username',username);
         $.get("/games/"+username+"/participants", function (data) {
             console.log(data);
             if(data!=null){ 

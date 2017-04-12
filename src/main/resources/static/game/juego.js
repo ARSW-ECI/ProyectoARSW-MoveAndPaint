@@ -11,7 +11,10 @@ var fondo;
 //Player Data
 var myGamePiece;
 var color = null;
+var posX = null;
+var posY = null;
 var direccion = null;
+var username = null;
 
 //Rivals Data
 var competitors = [];
@@ -24,15 +27,7 @@ function connect() {
         stompClient.subscribe('/topic/myCharacter', function (data) {
             var myInstruction = JSON.parse(data.body);
             console.log(myInstruction.keyboard);
-            if (myInstruction.keyboard == 39) {
-                move('right')
-            }
-            if (myInstruction.keyboard == 37) {
-                move('left')
-            }
-            if (myInstruction.keyboard == 38 || myInstruction.keyboard == 32) {
-                move('up')
-            }
+
         });
     });
 }
@@ -47,7 +42,8 @@ function disconnect() {
 
 
 function startGame() {
-    myGamePiece = new component(50, 50, color + direccion + ".png", 170, 170, "image");
+
+    myGamePiece = new component(50, 50, color + direccion + ".png", posX, posY, "image");
     fondo = new component(1150, 650, "fondo1.png", 0, 0, "image");
 
     //Floor
@@ -194,8 +190,8 @@ function updateGameArea() {
         myGamePiece.speedY = 0;
         myGamePiece.gravitySpeed = 0;
     }
-    
-    for(var j = 0 ; j < competitors ; j++){
+
+    for (var j = 0; j < competitors; j++) {
         competitors[j].update();
     }
 }
@@ -254,16 +250,16 @@ function move(dir) {
     }
 }
 
-function clearmove(myCharacter) {
-    myCharacter.image.src = color + direccion + ".png";
-    myCharacter.speedX = 0;
-    myCharacter.speedY = 0;
+function clearmove() {
+    myGamePiece.image.src = color + direccion + ".png";
+    myGamePiece.speedX = 0;
+    myGamePiece.speedY = 0;
 }
 
 $(document).ready(
         function () {
             connect();
-
+            username = localStorage.getItem('username');
             direcciones = ["Right", "Left"];
             var randomDireccion = Math.floor((Math.random() * 2) + 0);
             direccion = direcciones[randomDireccion];
@@ -271,7 +267,7 @@ $(document).ready(
             var coloresDisponibles = coloresJugadores.length;
             var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
             color = coloresJugadores[randomcolor];
-            
+
 
             $("#estilo").append("canvas {\n\
             height: 80%;\n\
@@ -282,14 +278,36 @@ $(document).ready(
 
             document.addEventListener('keydown', function (event) {
                 keyCode = event.keyCode;
-                stompClient.send('/topic/myCharacter', {}, JSON.stringify({keyboard: keyCode}));
+                if (keyCode == 39) {
+                    move('right')
+                }
+                if (keyCode == 37) {
+                    move('left')
+                }
+                if (keyCode == 38 || keyCode == 32) {
+                    move('up')
+                }
+                //stompClient.send('/topic/myCharacter', {}, JSON.stringify({keyboard: keyCode}));
 
             }, false);
             document.addEventListener('keyup', function (event) {
-                clearmove(myGamePiece);
+                clearmove();
             }, false);
-            
-            startGame();
 
+            $.get("/otros/participantsmod", function (data) {
+                console.log(data);
+                for (var i in data) {
+                    console.log(data[i].name);
+                    if (data[i].name == username) {
+                        color = data[i].color;
+                        posX = data[i].posX;
+                        posY = data[i].posY;
+                    } else {
+                        console.log(data[i]);
+                        competitors.push(data[i]);
+                    }
+                }
+                startGame();
+            });
         }
 );

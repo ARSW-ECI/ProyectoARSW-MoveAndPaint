@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
     ConcurrentHashMap<Integer, Set<Jugador>> roomGame = new ConcurrentHashMap<>();
+    int actual = 0;
+    String[] posiciones = {"170 250 rojo", "170 390 verde", "930 250 morado", "930 390 azul"};
 
     public MoveAndPaintRoomServicesStub() {
         roomGame.put(1, new ConcurrentSkipListSet<>());
@@ -26,22 +28,42 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
     @Override
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException {
-        System.out.println("Entro1");
         if (!roomGame.containsKey(idRoom)) {
             throw new ServicesException("Room " + idRoom + " not registered in the server.");
         } else {
-            if (roomGame.get(idRoom).size()<4) {
+            if (roomGame.get(idRoom).size() < 4) {
                 if (roomGame.get(idRoom).contains(player)) {
                     throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
                 } else {
+                    player.setPosX(Integer.parseInt(posiciones[actual].split(" ")[0]));
+                    player.setPosY(Integer.parseInt(posiciones[actual].split(" ")[1]));
+                    player.setColor(posiciones[actual].split(" ")[2]);
+                    actual++;
                     roomGame.get(idRoom).add(player);
-                    if(roomGame.get(idRoom).size()==4){
+                    if (roomGame.get(idRoom).size() == 4) {
                         return true;
                     }
                 }
             }
         }
         return false;
+    }
+    
+    @Override
+    public Set<Jugador> getJug(){
+        System.out.println(roomGame.get(1));
+        return roomGame.get(1);
+    }
+    
+    @Override
+    public Jugador getJugador(String username){
+        Jugador p = null;
+        for (Jugador player : roomGame.get(1)) {
+            if(player.getName().equals(username)){
+                p= player;
+            }
+        }
+        return p;
     }
 
 }

@@ -6,6 +6,7 @@
 package com.escuelaing.arsw.msgbroker.services;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
+import java.util.Set;
 
 /**
  *
@@ -13,4 +14,6 @@ import com.escuelaing.arsw.msgbroker.model.Jugador;
  */
 public interface MoveAndPaintRoomServices {
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException;
+    public Set<Jugador> getJug();
+    public Jugador getJugador(String username);
 }

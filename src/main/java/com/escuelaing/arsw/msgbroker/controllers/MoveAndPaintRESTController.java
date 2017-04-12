@@ -7,6 +7,7 @@ package com.escuelaing.arsw.msgbroker.controllers;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRegisterServices;
+import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRoomServicesStub;
 import com.escuelaing.arsw.msgbroker.services.ServicesException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ public class MoveAndPaintRESTController {
     @Autowired
     MoveAndPaintRegisterServices services;
     
+    
     @RequestMapping(path = "/participants", method = RequestMethod.GET)
     public ResponseEntity<?> getAllParticipants() {
         try {
@@ -39,6 +41,8 @@ public class MoveAndPaintRESTController {
             return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
         }
     }
+    
+    
     
     
     @RequestMapping(path = "/{username}/participants", method = RequestMethod.GET)

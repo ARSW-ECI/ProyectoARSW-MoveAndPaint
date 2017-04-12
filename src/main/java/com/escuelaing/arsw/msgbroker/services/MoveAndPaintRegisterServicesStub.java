@@ -44,6 +44,8 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
         }
     }
 
+    
+    
     @Override
     public Set<Jugador> getPlayerRegistered() throws ServicesException {
         if(players.isEmpty()){
