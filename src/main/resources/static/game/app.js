@@ -27,6 +27,7 @@ function Login() {
     username = document.getElementById("nombre").value;
     password = document.getElementById("passwordlogin").value;
     
+    
     if (username == "" || password == "" || roomid == "") {
         alert("LLENE TODOS LOS CAMPOS!!");
     } else {
@@ -44,6 +45,10 @@ function registrar() {
     var nombre = document.getElementById("usuario").value;
     var email = document.getElementById("email").value;
     var pass = document.getElementById("password").value;
+    password2 = document.getElementById("password2").value;
+    if(password2!=password){
+         alert("LAS CLAVES DE REGISTRO DEBEN SER IGUALES");
+    }
     if (nombre == "" || pass == "" || pass == "") {
         alert("LLENE TODOS LOS CAMPOS!!");
     } else {

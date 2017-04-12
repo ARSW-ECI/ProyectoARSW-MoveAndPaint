@@ -18,6 +18,7 @@ var username = null;
 
 //Rivals Data
 var competitors = [];
+var rivals = [];
 
 function connect() {
     var socket = new SockJS('/stompendpoint');
@@ -25,8 +26,12 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/myCharacter', function (data) {
-            var myInstruction = JSON.parse(data.body);
-            console.log(myInstruction.keyboard);
+            var charUpdate = JSON.parse(data.body);
+            for(var i = 0 ; i < competitors.length ; i++){
+                if(competitors[i].name == charUpdate.name){
+                    rivals[i].update();
+                }
+            }
 
         });
     });
@@ -45,6 +50,9 @@ function startGame() {
 
     myGamePiece = new component(50, 50, color + direccion + ".png", posX, posY, "image");
     fondo = new component(1150, 650, "fondo1.png", 0, 0, "image");
+    for(var i = 0 ; i < competitors.length ; i++){
+        rivals.push(new component(50,50,competitors[i].color+direccion+".png",competitors[i].posX,competitors[i].posY,"image"));
+    }
 
     //Floor
     for (var i = 0; i < 22; i++) {
@@ -146,6 +154,7 @@ function component(width, height, color, x, y, type) {
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
         this.hitup();
+        stompClient.send('/topic/myCharacter',{},JSON.stringify(myGamePiece));
     }
 
     this.hitBottom = function () {
@@ -190,10 +199,11 @@ function updateGameArea() {
         myGamePiece.speedY = 0;
         myGamePiece.gravitySpeed = 0;
     }
-
-    for (var j = 0; j < competitors; j++) {
-        competitors[j].update();
+    
+    for(var i = 0 ; i < rivals.length ; i++){
+        rivals[i].update();
     }
+   
 }
 
 function colCheck(shapeA, shapeB) {
