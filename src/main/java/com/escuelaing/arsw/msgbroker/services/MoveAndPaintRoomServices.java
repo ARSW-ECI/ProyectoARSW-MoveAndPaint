@@ -13,6 +13,8 @@ import java.util.Set;
  * @author Carlos Alberto Ramirez Otero
  */
 public interface MoveAndPaintRoomServices {
+    int MAX_PLAYERS = 2;
+    
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException;
     public Set<Jugador> getJug();
     public Jugador getJugador(String username);

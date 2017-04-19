@@ -27,7 +27,6 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
         Jugador j2 = new Jugador(10,0,"asd","carlos","carlos@mail.com");
         Jugador j3 = new Jugador(10,10,"qwe","juan","juan@mail.com");
         Jugador j4 = new Jugador(0,10,"zxc","mateo","mateo@mail.com");
-   //     Jugador j5 = new Jugador(30,30,"vfr","rodrigo","rodrigo@mail.com");
         players.add(j1);
         players.add(j2);
         players.add(j3);

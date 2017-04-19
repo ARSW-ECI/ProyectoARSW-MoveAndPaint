@@ -27,9 +27,12 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/myCharacter', function (data) {
             var charUpdate = JSON.parse(data.body);
-            for(var i = 0 ; i < competitors.length ; i++){
-                if(competitors[i].name == charUpdate.name){
-                    rivals[i].update();
+            console.log(charUpdate['posX']+" "+charUpdate['posY']+" "+charUpdate['image']);
+            for(var i = 0 ; i < rivals.length ; i++){
+                if(rivals[i].name == charUpdate.name){
+                    rivals[i].x = charUpdate['posX'];
+                    rivals[i].y = charUpdate['posY'];
+                    rivals[i].image.src = charUpdate['image'];
                 }
             }
 
@@ -48,57 +51,61 @@ function disconnect() {
 
 function startGame() {
 
-    myGamePiece = new component(50, 50, color + direccion + ".png", posX, posY, "image");
+    myGamePiece = new component(username,50, 50, color + direccion + ".png", posX, posY, "image");
     fondo = new component(1150, 650, "fondo1.png", 0, 0, "image");
     for(var i = 0 ; i < competitors.length ; i++){
-        rivals.push(new component(50,50,competitors[i].color+direccion+".png",competitors[i].posX,competitors[i].posY,"image"));
+        rivals.push(new component(competitors[i].name,50,50,competitors[i].color+direccion+".png",competitors[i].posX,competitors[i].posY,"image"));
     }
 
     //Floor
     for (var i = 0; i < 22; i++) {
-        obstacles.push(new component(50, 50, "caja.png", i * 50, 600, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", i * 50, 600, "image"));
     }
 
     //Left wall
     for (var i = 0; i < 13; i++) {
-        obstacles.push(new component(50, 50, "caja.png", 0, 50 * i, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 0, 50 * i, "image"));
     }
 
     //Right wall
     for (var i = 0; i < 13; i++) {
-        obstacles.push(new component(50, 50, "caja.png", 1100, 50 * i, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 1100, 50 * i, "image"));
     }
 
     //Platform Lvl 1
     for (var i = 3; i < 7; i++) {
-        obstacles.push(new component(50, 50, "caja.png", 50 * i, 450, "image"));
-        obstacles.push(new component(50, 50, "caja.png", 1100 - 50 * i, 450, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 50 * i, 450, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 1100 - 50 * i, 450, "image"));
     }
 
-    obstacles.push(new component(50, 50, "caja.png", 450, 450, "image"));
-    obstacles.push(new component(50, 50, "caja.png", 650, 450, "image"));
+    //Platform Triangle Form
+    obstacles.push(new component("plataforma",50, 50, "caja.png", 450, 450, "image"));
+    obstacles.push(new component("plataforma",50, 50, "caja.png", 650, 450, "image"));
 
-    obstacles.push(new component(50, 50, "caja.png", 500, 400, "image"));
-    obstacles.push(new component(50, 50, "caja.png", 600, 400, "image"));
+    obstacles.push(new component("plataforma",50, 50, "caja.png", 500, 400, "image"));
+    obstacles.push(new component("plataforma",50, 50, "caja.png", 600, 400, "image"));
 
-    obstacles.push(new component(50, 50, "caja.png", 550, 350, "image"));
+    obstacles.push(new component("plataforma",50, 50, "caja.png", 550, 350, "image"));
 
+    //Platform Lvl 2
     for (var i = 1; i < 4; i++) {
-        obstacles.push(new component(50, 50, "caja.png", 50 * i, 300, "image"));
-        obstacles.push(new component(50, 50, "caja.png", 1100 - (50 * i), 300, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 50 * i, 300, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 1100 - (50 * i), 300, "image"));
 
     }
 
+    //Platform Lvl 3 Center
     for (var i = 0; i < 11; i++) {
-        obstacles.push(new component(50, 50, "caja.png", 300 + (50 * i), 150, "image"));
-        obstacles.push(new component(50, 50, "caja.png", 300 + (50 * i), 150, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 300 + (50 * i), 150, "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 300 + (50 * i), 150, "image"));
     }
 
+    //Platform Lvl 3 Left and Right
     for (var i = 0; i < 2; i++) {
-        obstacles.push(new component(50, 50, "caja.png", 50 + (50 * i), 100 + (50 * i), "image"));
-        obstacles.push(new component(50, 50, "caja.png", 1100 - (50 + (50 * i)), 100 + (50 * i), "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 50 + (50 * i), 100 + (50 * i), "image"));
+        obstacles.push(new component("plataforma",50, 50, "caja.png", 1100 - (50 + (50 * i)), 100 + (50 * i), "image"));
 
-    }
+    }   
     myGameArea.start();
 }
 
@@ -120,7 +127,8 @@ var myGameArea = {
     }
 }
 
-function component(width, height, color, x, y, type) {
+function component(user, width, height, color, x, y, type) {
+    this.user = user;
     this.type = type;
     if (type == "image") {
         this.image = new Image();
@@ -154,7 +162,7 @@ function component(width, height, color, x, y, type) {
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
         this.hitup();
-        stompClient.send('/topic/myCharacter',{},JSON.stringify(myGamePiece));
+        
     }
 
     this.hitBottom = function () {
@@ -200,10 +208,10 @@ function updateGameArea() {
         myGamePiece.gravitySpeed = 0;
     }
     
+    stompClient.send('/topic/myCharacter',{},JSON.stringify({'name':myGamePiece.name,'posX':myGamePiece.x,'posY':myGamePiece.y,'image':myGamePiece.image.src}));
     for(var i = 0 ; i < rivals.length ; i++){
         rivals[i].update();
     }
-   
 }
 
 function colCheck(shapeA, shapeB) {
@@ -297,23 +305,18 @@ $(document).ready(
                 if (keyCode == 38 || keyCode == 32) {
                     move('up')
                 }
-                //stompClient.send('/topic/myCharacter', {}, JSON.stringify({keyboard: keyCode}));
-
             }, false);
             document.addEventListener('keyup', function (event) {
                 clearmove();
             }, false);
 
             $.get("/otros/participantsmod", function (data) {
-                console.log(data);
                 for (var i in data) {
-                    console.log(data[i].name);
                     if (data[i].name == username) {
                         color = data[i].color;
                         posX = data[i].posX;
                         posY = data[i].posY;
                     } else {
-                        console.log(data[i]);
                         competitors.push(data[i]);
                     }
                 }

@@ -6,17 +6,17 @@ var roomid;
 function connect() {
     var socket = new SockJS('/stompendpoint');
     stompClient = Stomp.over(socket);
-    
+
     stompClient.connect({}, function (frame) {
-        console.log('/topic/login.' + roomid);
-        stompClient.subscribe('/topic/login.' + roomid,function (data) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/login.' + roomid, function (data) {
             window.location = "juego.html";
         });
     });
 }
 
 function disconnect() {
-    
+
     if (stompClient != null) {
         stompClient.disconnect();
     }
@@ -26,16 +26,20 @@ function disconnect() {
 function Login() {
     username = document.getElementById("nombre").value;
     password = document.getElementById("passwordlogin").value;
-    
-    
+
+
     if (username == "" || password == "" || roomid == "") {
         alert("LLENE TODOS LOS CAMPOS!!");
     } else {
-        localStorage.setItem('username',username);
-        $.get("/games/"+username+"/participants", function (data) {
-            console.log(data);
-            if(data!=null){ 
-                stompClient.send("/app/" + roomid+"/inRoom", {}, JSON.stringify(data));
+        localStorage.setItem('username', username);
+        $.get("/games/" + username + "/participants", function (data) {
+            if (data != null) {
+                stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data));
+                $.get("/otros/participantsmod/"+username,function (data){
+                    if(data != null){
+                        alert("HA SIDO REGISTRADO EN LA SALA #"+roomid);
+                    }
+                });
             }
         });
     }
@@ -46,8 +50,8 @@ function registrar() {
     var email = document.getElementById("email").value;
     var pass = document.getElementById("password").value;
     password2 = document.getElementById("password2").value;
-    if(password2!=password){
-         alert("LAS CLAVES DE REGISTRO DEBEN SER IGUALES");
+    if (password2 != password) {
+        alert("LAS CLAVES DE REGISTRO DEBEN SER IGUALES");
     }
     if (nombre == "" || pass == "" || pass == "") {
         alert("LLENE TODOS LOS CAMPOS!!");

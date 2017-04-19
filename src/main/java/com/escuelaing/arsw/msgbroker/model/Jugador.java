@@ -67,7 +67,7 @@ public class Jugador implements Comparable<Jugador>{
     
     @Override
     public int compareTo(Jugador o) {
-        if(o.getName().equals(this.getName())){
+        if(o.getName().equals(this.name) || o.getEmail().equals(this.email)){
             return 0;
         }
         return 1;

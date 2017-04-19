@@ -31,7 +31,7 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
         if (!roomGame.containsKey(idRoom)) {
             throw new ServicesException("Room " + idRoom + " not registered in the server.");
         } else {
-            if (roomGame.get(idRoom).size() < 4) {
+            if (roomGame.get(idRoom).size() < MAX_PLAYERS) {
                 if (roomGame.get(idRoom).contains(player)) {
                     throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
                 } else {
@@ -40,7 +40,7 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
                     player.setColor(posiciones[actual].split(" ")[2]);
                     actual++;
                     roomGame.get(idRoom).add(player);
-                    if (roomGame.get(idRoom).size() == 4) {
+                    if (roomGame.get(idRoom).size() == MAX_PLAYERS) {
                         return true;
                     }
                 }
