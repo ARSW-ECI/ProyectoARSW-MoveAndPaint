@@ -35,7 +35,15 @@ public class STOMPMessagesHandler {
         if(registro){
             //asignacion de jugadores posicion, personaje
             msgt.convertAndSend("/topic/login."+idRoom,player);
+            controlTime();
         }
     }
-
+    
+    @MessageMapping("/initChron")
+    public void controlTime() throws Exception {
+        Thread.sleep(15000);
+        services.cleanRoom(1);
+        msgt.convertAndSend("/topic/endGame",1);
+    }
+    
 }

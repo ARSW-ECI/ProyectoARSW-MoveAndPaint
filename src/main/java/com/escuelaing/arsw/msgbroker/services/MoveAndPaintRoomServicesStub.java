@@ -18,11 +18,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
-    ConcurrentHashMap<Integer, Set<Jugador>> roomGame = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Integer,Set<Jugador>> roomGame;
     int actual = 0;
-    String[] posiciones = {"170 250 rojo", "170 390 verde", "930 250 morado", "930 390 azul"};
+    String[] posiciones = {"170 250 Rojo", "170 390 Verde", "930 250 Morado", "930 390 Azul"};
 
     public MoveAndPaintRoomServicesStub() {
+        roomGame = new ConcurrentHashMap<>();
         roomGame.put(1, new ConcurrentSkipListSet<>());
     }
 
@@ -48,6 +49,10 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
         }
         return false;
     }
+
+    public ConcurrentHashMap<Integer, Set<Jugador>> getRoomGame() {
+        return roomGame;
+    }
     
     @Override
     public Set<Jugador> getJug(){
@@ -64,6 +69,11 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
             }
         }
         return p;
+    }
+
+    @Override
+    public void cleanRoom(int room) {
+        roomGame.get(room).clear();
     }
 
 }

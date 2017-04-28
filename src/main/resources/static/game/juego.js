@@ -37,6 +37,17 @@ function connect() {
             }
 
         });
+        stompClient.subscribe('/topic/myPos', function (data) {
+            var charUpdate = JSON.parse(data.body);
+            var ind = charUpdate['ind'];
+            var myColor = charUpdate['posColor'];
+            obstacles[ind].image.src = "caja"+myColor+".png";
+
+        });
+        stompClient.subscribe('/topic/endGame', function (data) {
+            alert('YA SE ACABO LA PARTIDA');
+            window.location = "index.html";
+        });
     });
 }
 
@@ -189,18 +200,20 @@ function updateGameArea() {
 
     myGamePiece.grounded = false;
     for (var i = 0; i < obstacles.length; i++) {
-        obstacles[i].update();
+        
         var dir = colCheck(myGamePiece, obstacles[i]);
 
         if (dir === "l" || dir === "r") {
             myGamePiece.speedX = 0;
             myGamePiece.jumping = false;
         } else if (dir === "b") {
+            stompClient.send('/topic/myPos',{},JSON.stringify({'ind':i,'posColor':color}));
             myGamePiece.grounded = true;
             myGamePiece.jumping = false;
         } else if (dir === "t") {
             myGamePiece.speedY *= -1;
         }
+        obstacles[i].update();
     }
 
     if (myGamePiece.grounded) {
@@ -208,10 +221,11 @@ function updateGameArea() {
         myGamePiece.gravitySpeed = 0;
     }
     
-    stompClient.send('/topic/myCharacter',{},JSON.stringify({'name':myGamePiece.name,'posX':myGamePiece.x,'posY':myGamePiece.y,'image':myGamePiece.image.src}));
+    
     for(var i = 0 ; i < rivals.length ; i++){
         rivals[i].update();
     }
+    stompClient.send('/topic/myCharacter',{},JSON.stringify({'name':myGamePiece.name,'posX':myGamePiece.x,'posY':myGamePiece.y,'image':myGamePiece.image.src}));
 }
 
 function colCheck(shapeA, shapeB) {
@@ -266,6 +280,7 @@ function move(dir) {
         myGamePiece.image.src = color + direccion + ".png";
         myGamePiece.speedX = 5;
     }
+    
 }
 
 function clearmove() {

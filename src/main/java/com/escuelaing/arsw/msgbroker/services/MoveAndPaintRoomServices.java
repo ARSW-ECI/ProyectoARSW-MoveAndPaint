@@ -18,4 +18,5 @@ public interface MoveAndPaintRoomServices {
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException;
     public Set<Jugador> getJug();
     public Jugador getJugador(String username);
+    public void cleanRoom(int room);
 }
