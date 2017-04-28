@@ -148,7 +148,7 @@ function component(user, width, height, color, x, y, type) {
     this.y = y;
     this.speedX = 0;
     this.speedY = 0;
-    this.grounded = false; //inicia flase si el jugador esta en el aire sino true
+    this.grounded = false; //inicia false si el jugador esta en el aire sino true
     this.gravity = 0.1;
     this.gravitySpeed = 0;
     this.friction = 0.8;
