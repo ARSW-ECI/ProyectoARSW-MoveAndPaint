@@ -41,7 +41,7 @@ public class STOMPMessagesHandler {
     
     @MessageMapping("/initChron")
     public void controlTime() throws Exception {
-        Thread.sleep(15000);
+        Thread.sleep(300000);
         services.cleanRoom(1);
         msgt.convertAndSend("/topic/endGame",1);
     }
