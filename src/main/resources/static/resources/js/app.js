@@ -10,7 +10,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/login.' + roomid, function (data) {
-            window.location = "juego.html";
+            window.location = "/game/juego.html";
         });
     });
 }

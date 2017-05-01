@@ -7,6 +7,7 @@ var stompClient = null;
 var context;
 var obstacles = [];
 var fondo;
+var folderImage = "/game/characters/";
 
 //Player Data
 var myGamePiece;
@@ -41,12 +42,12 @@ function connect() {
             var charUpdate = JSON.parse(data.body);
             var ind = charUpdate['ind'];
             var myColor = charUpdate['posColor'];
-            obstacles[ind].image.src = "caja"+myColor+".png";
+            obstacles[ind].image.src = folderImage+"caja"+myColor+".png";
 
         });
         stompClient.subscribe('/topic/endGame', function (data) {
             alert('YA SE ACABO LA PARTIDA');
-            window.location = "index.html";
+            window.location = "../index.html";
         });
     });
 }
@@ -61,59 +62,59 @@ function disconnect() {
 
 
 function startGame() {
-    myGamePiece = new component(username, 50, 50, color + direccion + ".png", posX, posY, "image");
-    fondo = new component(1150, 650, "fondo1.png", 0, 0, "image");
+    myGamePiece = new component(username, 50, 50, folderImage+ color + direccion + ".png", posX, posY, "image");
+    fondo = new component(1150, 650, "/resources/images/fondo1.png", 0, 0, "image");
     for (var i = 0; i < competitors.length; i++) {
-        rivals.push(new component(competitors[i].name, 50, 50, competitors[i].color + direccion + ".png", competitors[i].posX, competitors[i].posY, "image"));
+        rivals.push(new component(competitors[i].name, 50, 50, folderImage + competitors[i].color + direccion + ".png", competitors[i].posX, competitors[i].posY, "image"));
     }
 
     //Floor
     for (var i = 0; i < 22; i++) {
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", i * 50, 600, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", i * 50, 600, "image"));
     }
 
     //Left wall
     for (var i = 0; i < 13; i++) {
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 0, 50 * i, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 0, 50 * i, "image"));
     }
 
     //Right wall
     for (var i = 0; i < 13; i++) {
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 1100, 50 * i, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100, 50 * i, "image"));
     }
 
     //Platform Lvl 1
     for (var i = 3; i < 7; i++) {
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 50 * i, 450, "image"));
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 1100 - 50 * i, 450, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 50 * i, 450, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100 - 50 * i, 450, "image"));
     }
 
     //Platform Triangle Form
-    obstacles.push(new component("plataforma", 50, 50, "caja.png", 450, 450, "image"));
-    obstacles.push(new component("plataforma", 50, 50, "caja.png", 650, 450, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 450, 450, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 650, 450, "image"));
 
-    obstacles.push(new component("plataforma", 50, 50, "caja.png", 500, 400, "image"));
-    obstacles.push(new component("plataforma", 50, 50, "caja.png", 600, 400, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 500, 400, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 600, 400, "image"));
 
-    obstacles.push(new component("plataforma", 50, 50, "caja.png", 550, 350, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 550, 350, "image"));
 
     //Platform Lvl 2
     for (var i = 1; i < 4; i++) {
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 50 * i, 300, "image"));
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 1100 - (50 * i), 300, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 50 * i, 300, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100 - (50 * i), 300, "image"));
 
     }
 
     //Platform Lvl 3 Center
     for (var i = 0; i < 11; i++) {
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 300 + (50 * i), 150, "image"));
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 300 + (50 * i), 150, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 300 + (50 * i), 150, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 300 + (50 * i), 150, "image"));
     }
 
     //Platform Lvl 3 Left and Right
     for (var i = 0; i < 2; i++) {
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 50 + (50 * i), 100 + (50 * i), "image"));
-        obstacles.push(new component("plataforma", 50, 50, "caja.png", 1100 - (50 + (50 * i)), 100 + (50 * i), "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 50 + (50 * i), 100 + (50 * i), "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100 - (50 + (50 * i)), 100 + (50 * i), "image"));
     }
     myGameArea.start();
 }
@@ -230,9 +231,6 @@ function updateGameArea() {
     if (!myGamePiece.grounded || myGamePiece.speedY != 0 || myGamePiece.speedX != 0) {
             stompClient.send('/topic/myCharacter', {}, JSON.stringify({'user': myGamePiece.user, 'posX': myGamePiece.x, 'posY': myGamePiece.y, 'image': myGamePiece.image.src}));
     }
-        
-    
-    
 
 }
 
@@ -280,19 +278,19 @@ function move(dir) {
     }
     if (dir == "left") {
         direccion = "Left";
-        myGamePiece.image.src = color + direccion + ".png";
+        myGamePiece.image.src = folderImage + color + direccion + ".png";
         myGamePiece.speedX = -5;
     }
     if (dir == "right") {
         direccion = "Right";
-        myGamePiece.image.src = color + direccion + ".png";
+        myGamePiece.image.src = folderImage + color + direccion + ".png";
         myGamePiece.speedX = 5;
     }
 
 }
 
 function clearmove() {
-    myGamePiece.image.src = color + direccion + ".png";
+    myGamePiece.image.src = folderImage + color + direccion + ".png";
     myGamePiece.speedX = 0;
     myGamePiece.speedY = 0;
 }

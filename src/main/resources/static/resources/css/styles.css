@@ -9,8 +9,7 @@
     box-shadow: 0px 5px 10px #B5C1C5, 0 0 0 10px #EEF5F7 inset;
     width: 45%;
     float:left;
-    
-    
+
 }
 
 .formulario label{
@@ -22,11 +21,7 @@
     margin-bottom: 15px; /* esto los separara un poco */
 }
 
-
-
-
-.button
-{
+.button{
     border: 1px solid #DBE1EB;
     font-size: 100%;
     font-family: Arial, Verdana;
@@ -46,8 +41,7 @@
     color: #FFFFFF;
 }
 
-.button:hover
-{
+.button:hover{
     background: #365D9D;
     background: linear-gradient(left, #365D9D, #436CAD);
     background: -moz-linear-gradient(left, #365D9D, #436CAD);
@@ -90,7 +84,7 @@ input,button{
 }
 
 body {
-    background-image: url("fondo1.png");
+    background-image: url("/resources/images/fondo1.png");
     font:23px arial;
     color: black;
     text-align:center;
