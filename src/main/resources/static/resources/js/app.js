@@ -10,13 +10,13 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/login.' + roomid, function (data) {
+            console.log("SALAAAAAAAAa");
             window.location = "/game/juego.html";
         });
     });
 }
 
 function disconnect() {
-
     if (stompClient != null) {
         stompClient.disconnect();
     }
@@ -26,7 +26,7 @@ function disconnect() {
 function Login() {
     username = document.getElementById("nombre").value;
     password = document.getElementById("passwordlogin").value;
-
+    roomid = document.getElementById("room").value;
 
     if (username == "" || password == "" || roomid == "") {
         alert("LLENE TODOS LOS CAMPOS!!");
@@ -37,9 +37,8 @@ function Login() {
                 stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data));
                 $.get("/otros/participantsmod/" + username, function (data) {
                     if (data != null) {
-                        alert("HA SIDO REGISTRADO EN LA SALA #" + roomid);
+                        alert("HA SIDO REGISTRADO EN LA SALA # " + roomid);
                     }
-                    
                 });
             }
         });
@@ -65,7 +64,6 @@ function registrar() {
                 "color": "",
                 "email": email
             };
-
             var postPromise = $.ajax({
                 url: "/games/participants",
                 type: 'POST',
@@ -91,7 +89,7 @@ function registrar() {
 
 $(document).ready(
         function () {
-            roomid = document.getElementById("room").value;
+            
             connect();
         }
 );

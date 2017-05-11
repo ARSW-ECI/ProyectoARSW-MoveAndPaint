@@ -9,6 +9,7 @@ import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRegisterServices;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRoomServicesStub;
 import com.escuelaing.arsw.msgbroker.services.ServicesException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,7 @@ public class MoveAndPaintRESTController {
             return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.FORBIDDEN);
         }
     }
+    
+    
 
 }

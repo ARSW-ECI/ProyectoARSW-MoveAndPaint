@@ -7,6 +7,7 @@ package com.escuelaing.arsw.msgbroker.services;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -19,4 +20,5 @@ public interface MoveAndPaintRoomServices {
     public Set<Jugador> getJug();
     public Jugador getJugador(String username);
     public void cleanRoom(int room);
+    public ConcurrentHashMap<Integer, Set<Jugador>> getRoomGame();
 }

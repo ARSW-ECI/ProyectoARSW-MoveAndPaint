@@ -33,17 +33,18 @@ public class STOMPMessagesHandler {
     public void postNewPlayerInRoom(@DestinationVariable int idRoom, Jugador player) throws Exception {
         boolean registro = services.registerPlayerRoom(idRoom, player);
         if(registro){
+            System.out.println(idRoom);
             //asignacion de jugadores posicion, personaje
             msgt.convertAndSend("/topic/login."+idRoom,player);
-            controlTime();
+            controlTime(idRoom);
         }
     }
     
     @MessageMapping("/initChron")
-    public void controlTime() throws Exception {
+    public void controlTime(int idRoom) throws Exception {
         Thread.sleep(300000);
-        services.cleanRoom(1);
-        msgt.convertAndSend("/topic/endGame",1);
+        services.cleanRoom(idRoom);
+        msgt.convertAndSend("/topic/endGame",idRoom);
     }
     
 }
