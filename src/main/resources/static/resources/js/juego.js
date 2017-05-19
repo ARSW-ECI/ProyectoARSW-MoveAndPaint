@@ -38,16 +38,16 @@ function connect() {
             }
 
         });
-        stompClient.subscribe('/topic/myPos', function (data) {
+        stompClient.subscribe('/topic/myPos.'+localStorage.getItem("idRoom"), function (data) {
             var charUpdate = JSON.parse(data.body);
             var ind = charUpdate['ind'];
             var myColor = charUpdate['posColor'];
             obstacles[ind].image.src = folderImage+"caja"+myColor+".png";
 
         });
-        stompClient.subscribe('/topic/endGame', function (data) {
+        stompClient.subscribe('/topic/endGame.'+localStorage.getItem("idRoom"), function (data) {
             alert('YA SE ACABO LA PARTIDA');
-            window.location = "../index.html";
+            window.location = "../";
         });
     });
 }
@@ -62,6 +62,7 @@ function disconnect() {
 
 
 function startGame() {
+    console.log("ASDFA "+color);
     myGamePiece = new component(username, 50, 50, folderImage+ color + direccion + ".png", posX, posY, "image");
     fondo = new component(1150, 650, "/resources/images/fondo1.png", 0, 0, "image");
     for (var i = 0; i < competitors.length; i++) {
@@ -164,6 +165,7 @@ function component(user, width, height, color, x, y, type) {
     this.update = function () {
         ctx = myGameArea.context;
         if (type == "image") {
+            console.log(this.image+" "+this.x+" "+this.y+" "+this.width+" "+this.height);
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
             ctx.fillStyle = color;
@@ -211,7 +213,10 @@ function updateGameArea() {
             myGamePiece.speedX = 0;
             myGamePiece.jumping = false;
         } else if (dir === "b") {
-            stompClient.send('/topic/myPos',{},JSON.stringify({'ind':i,'posColor':color}));
+            if (myGamePiece.speedY != 0 || myGamePiece.speedX != 0) {
+                console.log("entrngfd");
+                stompClient.send('/topic/myPos.'+localStorage.getItem("idRoom"),{},JSON.stringify({'ind':i,'posColor':color}));
+            }
             myGamePiece.grounded = true;
             myGamePiece.jumping = false;
         } else if (dir === "t") {
@@ -229,7 +234,8 @@ function updateGameArea() {
         rivals[i].update();
     }
     if (!myGamePiece.grounded || myGamePiece.speedY != 0 || myGamePiece.speedX != 0) {
-            stompClient.send('/topic/myCharacter', {}, JSON.stringify({'user': myGamePiece.user, 'posX': myGamePiece.x, 'posY': myGamePiece.y, 'image': myGamePiece.image.src}));
+        console.log(myGamePiece.grounded+" , "+myGamePiece.speedY+" , "+myGamePiece.speedX);
+        stompClient.send('/topic/myCharacter', {}, JSON.stringify({'user': myGamePiece.user, 'posX': myGamePiece.x, 'posY': myGamePiece.y, 'image': myGamePiece.image.src}));
     }
 
 }
@@ -302,7 +308,7 @@ $(document).ready(
             direcciones = ["Right", "Left"];
             var randomDireccion = Math.floor((Math.random() * 2) + 0);
             direccion = direcciones[randomDireccion];
-            var coloresJugadores = ["rojo", "azul", "amarillo", "verde", "fantasma", "morado", "naranja"];
+            var coloresJugadores = ["Rojo", "Azul", "Amarillo", "Verde", "Fantasma", "Morado", "Naranja"];
             var coloresDisponibles = coloresJugadores.length;
             var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
             color = coloresJugadores[randomcolor];
@@ -331,7 +337,7 @@ $(document).ready(
                 clearmove();
             }, false);
 
-            $.get("/otros/participantsmod", function (data) {
+            $.get("/otros/salas/"+localStorage.getItem("idRoom"), function (data) {
                 for (var i in data) {
                     if (data[i].name == username) {
                         color = data[i].color;
@@ -342,6 +348,7 @@ $(document).ready(
                     }
                 }
                 startGame();
+                
             });
         }
 );

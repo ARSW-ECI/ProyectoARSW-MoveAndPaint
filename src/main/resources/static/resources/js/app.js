@@ -9,10 +9,7 @@ function connect() {
 
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/login.' + roomid, function (data) {
-            console.log("SALAAAAAAAAa");
-            window.location = "/game/juego.html";
-        });
+
     });
 }
 
@@ -32,14 +29,35 @@ function Login() {
         alert("LLENE TODOS LOS CAMPOS!!");
     } else {
         localStorage.setItem('username', username);
+        localStorage.setItem('idRoom',roomid);
+
+        var promise = $.get("/games/" + username + "/participants");
+
+        promise.then(
+                function (data) {
+                    
+                    stompClient.subscribe('/topic/login.' + roomid, function (data) {
+                        window.location = "/game/juego.html";
+                    });
+                    
+                    stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data));
+
+                    $.get("/otros/participantsmod/" + username, function (data) {
+                        if (data != null) {
+                            alert("HA SIDO REGISTRADO EN LA SALA # " + roomid);
+                        }
+                    });
+                },
+                function () {
+                    alert("ERROR AL ENTRAR EN COLA A LA PARTIDA!!");
+                }
+        );
+
+
+
         $.get("/games/" + username + "/participants", function (data) {
             if (data != null) {
-                stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data));
-                $.get("/otros/participantsmod/" + username, function (data) {
-                    if (data != null) {
-                        alert("HA SIDO REGISTRADO EN LA SALA # " + roomid);
-                    }
-                });
+
             }
         });
     }
@@ -89,7 +107,6 @@ function registrar() {
 
 $(document).ready(
         function () {
-            
             connect();
         }
 );

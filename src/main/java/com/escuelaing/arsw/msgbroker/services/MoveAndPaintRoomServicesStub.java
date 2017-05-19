@@ -20,7 +20,7 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
     ConcurrentHashMap<Integer, Set<Jugador>> roomGame;
     int actual = 0;
-    String[] posiciones = {"170 250 Rojo", "170 390 Verde", "930 250 Morado", "930 390 Azul"};
+    String[] posiciones = {"170 250 Rojo", "930 250 Morado", "170 390 Verde", "930 390 Azul", "170 250 Amarillo", "930 250 Fantasma", "170 390 Naranja", "930 390 Sasuke"};
 
     public int getActual() {
         return actual;
@@ -34,22 +34,25 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
         return posiciones;
     }
 
+   
+    
     public void setPosiciones(String[] posiciones) {
         this.posiciones = posiciones;
     }
 
     public MoveAndPaintRoomServicesStub() {
-        System.out.println("Creo un stub??");
         roomGame = new ConcurrentHashMap<>();
         roomGame.put(1, new ConcurrentSkipListSet<>());
     }
 
     @Override
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException {
+        if(actual==7) actual=0;
         if (!roomGame.containsKey(idRoom)) {
             roomGame.put(idRoom, new ConcurrentSkipListSet<>());
             //throw new ServicesException("Room " + idRoom + " not registered in the server.");
-        } else if (roomGame.get(idRoom).size() < MAX_PLAYERS) {
+        }
+        if (roomGame.get(idRoom).size() < MAX_PLAYERS) {
             if (roomGame.get(idRoom).contains(player)) {
                 throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
             } else {

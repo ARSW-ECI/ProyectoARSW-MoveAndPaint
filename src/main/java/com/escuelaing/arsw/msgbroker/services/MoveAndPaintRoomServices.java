@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Carlos Alberto Ramirez Otero
  */
 public interface MoveAndPaintRoomServices {
-    int MAX_PLAYERS = 2;
+    int MAX_PLAYERS = 3;
     
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException;
     public Set<Jugador> getJug();
