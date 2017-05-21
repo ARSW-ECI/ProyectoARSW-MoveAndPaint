@@ -29,28 +29,28 @@ function Login() {
         alert("LLENE TODOS LOS CAMPOS!!");
     } else {
         localStorage.setItem('username', username);
-        localStorage.setItem('idRoom',roomid);
+        localStorage.setItem('idRoom', roomid);
 
         var promise = $.get("/games/" + username + "/participants");
 
         promise.then(
                 function (data) {
-                    
+
                     stompClient.subscribe('/topic/login.' + roomid, function (data) {
                         window.location = "/game/juego.html";
                     });
-                    
+
                     stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data));
-                    
-                    var getuserpromise = $.get("/otros/participantinroom/"+username+"/"+roomid);
-                    
+
+                    var getuserpromise = $.get("/otros/participantinroom/" + username + "/" + roomid);
+
                     getuserpromise.then(
-                        function(data){
-                            alert("EL USUARIO ACABA DE REGISTARSE EN LA SALA O YA ESTA EN COLA!!!"); 
-                        },
-                        function(){                          
-                            alert("EL USUARIO NO PUDO INGRESAR A LA SALA!!!"); 
-                        }
+                            function (data) {
+                                alert("EL USUARIO ACABA DE REGISTARSE EN LA SALA O YA ESTA EN COLA!!!");
+                            },
+                            function () {
+                                alert("EL USUARIO NO PUDO INGRESAR A LA SALA!!!");
+                            }
                     );
                 },
                 function () {
@@ -76,8 +76,8 @@ function registrar() {
                 "name": nombre,
                 "posX": 0,
                 "posY": 0,
-                "puntajeActual":0,
-                "puntajeAcumulado":0,
+                "puntajeActual": 0,
+                "puntajeAcumulado": 0,
                 "color": "",
                 "email": email
             };

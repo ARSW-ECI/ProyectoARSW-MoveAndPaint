@@ -37,7 +37,7 @@ public class STOMPMessagesHandler {
     }
 
     public void controlTime(int idRoom) throws Exception {
-        Thread.sleep(40000);
+        Thread.sleep(95000);
         msgt.convertAndSend("/topic/endGame." + idRoom, idRoom);
     }
 

@@ -9,6 +9,11 @@ var obstacles = [];
 var fondo;
 var folderImage = "/game/characters/";
 
+var centesimas = 0;
+var segundos = 0;
+var minutos = 0;
+var horas = 0;
+
 //Player Data
 var myGamePiece;
 var color = null;
@@ -44,13 +49,13 @@ function connect() {
             obstacles[ind].image.src = folderImage + "caja" + myColor + ".png";
 
         });
-        
+
         stompClient.subscribe('/topic/wininroom.' + localStorage.getItem("idRoom"), function (data) {
             alert(data.body);
             window.location = "../";
 
         });
-        
+
         stompClient.subscribe('/topic/endGame.' + localStorage.getItem("idRoom"), function (data) {
             var myBoxes = 0;
             for (var i = 0; i < obstacles.length; i++) {
@@ -59,8 +64,8 @@ function connect() {
                 }
             }
             console.log(myBoxes);
-            infom={"name":username,"score":myBoxes};
-            stompClient.send('/app/'+localStorage.getItem("idRoom")+'/winnner', {}, JSON.stringify(infom));
+            infom = {"name": username, "score": myBoxes};
+            stompClient.send('/app/' + localStorage.getItem("idRoom") + '/winnner', {}, JSON.stringify(infom));
             alert('YA SE ACABO LA PARTIDA');
         });
     });
@@ -311,6 +316,47 @@ function clearmove() {
     myGamePiece.speedY = 0;
 }
 
+function inicio() {
+    control = setInterval(cronometro, 10);
+}
+
+function cronometro() {
+    if (centesimas < 99) {
+        centesimas++;
+        if (centesimas < 10) {
+            centesimas = "0" + centesimas
+        }
+    }
+    if (centesimas == 99) {
+        centesimas = -1;
+    }
+    if (centesimas == 0) {
+        segundos++;
+        if (segundos < 10) {
+            segundos = "0" + segundos
+        }
+        Segundos.innerHTML = "Tiempo de juego :" + segundos;
+    }
+    if (segundos == 59) {
+        segundos = -1;
+    }
+    if ((centesimas == 0) && (segundos == 0)) {
+        minutos++;
+        if (minutos < 10) {
+            minutos = "0" + minutos
+        }
+    }
+    if (minutos == 59) {
+        minutos = -1;
+    }
+    if ((centesimas == 0) && (segundos == 0) && (minutos == 0)) {
+        horas++;
+        if (horas < 10) {
+            horas = "0" + horas
+        }
+    }
+}
+
 $(document).ready(
         function () {
             connect();
@@ -322,7 +368,6 @@ $(document).ready(
             var coloresDisponibles = coloresJugadores.length;
             var randomcolor = Math.floor((Math.random() * coloresDisponibles) + 0);
             color = coloresJugadores[randomcolor];
-
 
             $("#estilo").append("canvas {\n\
             height: 80%;\n\
@@ -358,6 +403,7 @@ $(document).ready(
                     }
                 }
                 startGame();
+                inicio();
 
             });
         }
