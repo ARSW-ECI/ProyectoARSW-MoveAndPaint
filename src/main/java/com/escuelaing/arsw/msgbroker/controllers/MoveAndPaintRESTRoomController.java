@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.escuelaing.arsw.msgbroker.controllers;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRoomServices;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
+import com.escuelaing.arsw.msgbroker.services.ServicesException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author Carlos
+ * @author Carlos Alberto Ramirez Otero
  */
 @RestController
 @RequestMapping(value = "/otros")
@@ -32,19 +25,24 @@ public class MoveAndPaintRESTRoomController {
     @Autowired
     MoveAndPaintRoomServices services;
 
-    @RequestMapping(path = "/participantsmod", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllParticipantsMod() {
-        return new ResponseEntity<>(services.getJug(), HttpStatus.ACCEPTED);
+    @RequestMapping(path = "/participantinroom/{username}/{idRoom}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPlayer(@PathVariable String username, @PathVariable int idRoom) {
+        try {
+            return new ResponseEntity<>(services.getJugador(idRoom, username), HttpStatus.ACCEPTED);
+        } catch (ServicesException ex) {
+            Logger.getLogger(MoveAndPaintRESTRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-
-    @RequestMapping(path = "/participantsmod/{username}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPlayer(@PathVariable String username) {
-        return new ResponseEntity<>(services.getJugador(username), HttpStatus.ACCEPTED);
-    }
-
-    @RequestMapping(path = "/salas/{idRoom}", method = RequestMethod.GET)
-    public ResponseEntity<?> getRoom(@PathVariable int idRoom) {
-        return new ResponseEntity<>(services.getRoomGame().get(idRoom), HttpStatus.ACCEPTED);
+    
+    @RequestMapping(path = "/participantsinroom/{idRoom}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPlayer(@PathVariable int idRoom) {
+        try {
+            return new ResponseEntity<>(services.getPlayersinRoom(idRoom), HttpStatus.ACCEPTED);
+        } catch (ServicesException ex) {
+            Logger.getLogger(MoveAndPaintRESTRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(path = "/{idSala}/colaboradores", method = RequestMethod.POST)
@@ -52,7 +50,7 @@ public class MoveAndPaintRESTRoomController {
         try {
             services.registerPlayerRoom(idSala, player);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        } catch (Exception ex) {
+        } catch (ServicesException ex) {
             return new ResponseEntity<>("Error al agregar colaborador a la sala: " + idSala, HttpStatus.NOT_FOUND);
         }
     }

@@ -49,9 +49,9 @@ public class MoveAndPaintRegisterTest {
         } catch (ServicesException ex) {
             Logger.getLogger(MoveAndPaintRegisterTest.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
-        assertEquals("Deberian haber 4 jugadores registrados",registerTest.getPlayerRegistered().size(),4);
+        assertEquals("Deberian haber 4 jugadores registrados",registerTest.getPlayersRegistered().size(),4);
         registerTest.registerPlayer(j3);
-        assertEquals("Deberian haber 5 jugadores registrados",registerTest.getPlayerRegistered().size(),5);
+        assertEquals("Deberian haber 5 jugadores registrados",registerTest.getPlayersRegistered().size(),5);
         
     }
 }

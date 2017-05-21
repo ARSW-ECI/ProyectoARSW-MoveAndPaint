@@ -41,25 +41,22 @@ function Login() {
                     });
                     
                     stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data));
-
-                    $.get("/otros/participantsmod/" + username, function (data) {
-                        if (data != null) {
-                            alert("HA SIDO REGISTRADO EN LA SALA # " + roomid);
+                    
+                    var getuserpromise = $.get("/otros/participantinroom/"+username+"/"+roomid);
+                    
+                    getuserpromise.then(
+                        function(data){
+                            alert("EL USUARIO ACABA DE REGISTARSE EN LA SALA O YA ESTA EN COLA!!!"); 
+                        },
+                        function(){                          
+                            alert("EL USUARIO NO PUDO INGRESAR A LA SALA!!!"); 
                         }
-                    });
+                    );
                 },
                 function () {
                     alert("ERROR AL ENTRAR EN COLA A LA PARTIDA!!");
                 }
         );
-
-
-
-        $.get("/games/" + username + "/participants", function (data) {
-            if (data != null) {
-
-            }
-        });
     }
 }
 
@@ -79,6 +76,8 @@ function registrar() {
                 "name": nombre,
                 "posX": 0,
                 "posY": 0,
+                "puntajeActual":0,
+                "puntajeAcumulado":0,
                 "color": "",
                 "email": email
             };

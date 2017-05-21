@@ -5,10 +5,13 @@
  */
 package com.escuelaing.arsw.msgbroker.services;
 
+import com.escuelaing.arsw.msgbroker.model.Ganador;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
+import com.escuelaing.arsw.msgbroker.model.Room;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,82 +21,77 @@ import org.springframework.stereotype.Service;
 @Service
 public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
-    ConcurrentHashMap<Integer, Set<Jugador>> roomGame;
-    int actual = 0;
+    ConcurrentHashMap<Integer, Room> roomGame;
     String[] posiciones = {"170 250 Rojo", "930 250 Morado", "170 390 Verde", "930 390 Azul", "170 250 Amarillo", "930 250 Fantasma", "170 390 Naranja", "930 390 Sasuke"};
-
-    public int getActual() {
-        return actual;
-    }
-
-    public void setActual(int actual) {
-        this.actual = actual;
-    }
 
     public String[] getPosiciones() {
         return posiciones;
     }
 
-   
-    
     public void setPosiciones(String[] posiciones) {
         this.posiciones = posiciones;
     }
 
     public MoveAndPaintRoomServicesStub() {
         roomGame = new ConcurrentHashMap<>();
-        roomGame.put(1, new ConcurrentSkipListSet<>());
+        roomGame.put(1, new Room());
     }
 
     @Override
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException {
-        if(actual==7) actual=0;
-        if (!roomGame.containsKey(idRoom)) {
-            roomGame.put(idRoom, new ConcurrentSkipListSet<>());
-            //throw new ServicesException("Room " + idRoom + " not registered in the server.");
-        }
-        if (roomGame.get(idRoom).size() < MAX_PLAYERS) {
-            if (roomGame.get(idRoom).contains(player)) {
-                throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
-            } else {
-                player.setPosX(Integer.parseInt(posiciones[actual].split(" ")[0]));
-                player.setPosY(Integer.parseInt(posiciones[actual].split(" ")[1]));
-                player.setColor(posiciones[actual].split(" ")[2]);
-                actual++;
-                roomGame.get(idRoom).add(player);
-                if (roomGame.get(idRoom).size() == MAX_PLAYERS) {
-                    return true;
+        synchronized (roomGame.get(idRoom)) {
+            if (roomGame.get(idRoom).getPlayers().size() < MAX_PLAYERS) {
+                if (roomGame.get(idRoom).getPlayers().contains(player)) {
+                    throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
+                } else {
+                    player.setPosX(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[0]));
+                    player.setPosY(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[1]));
+                    player.setColor(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[2]);
+                    roomGame.get(idRoom).setActual(roomGame.get(idRoom).getActual() + 1);
+                    roomGame.get(idRoom).getPlayers().add(player);
+                    if (roomGame.get(idRoom).getPlayers().size() == MAX_PLAYERS) {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
     }
 
     @Override
-    public ConcurrentHashMap<Integer, Set<Jugador>> getRoomGame() {
-        return roomGame;
-    }
-
-    @Override
-    public Set<Jugador> getJug() {
-        System.out.println(roomGame.get(1));
-        return roomGame.get(1);
-    }
-
-    @Override
-    public Jugador getJugador(String username) {
-        Jugador p = null;
-        for (Jugador player : roomGame.get(1)) {
-            if (player.getName().equals(username)) {
-                p = player;
+    public Jugador getJugador(int idRoom, String username) throws ServicesException {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        synchronized (roomGame.get(idRoom)) {
+            for (Jugador player : roomGame.get(idRoom).getPlayers()) {
+                if (player.getName().equals(username)) {
+                    return player;
+                }
             }
+            throw new ServicesException("Room #" + idRoom + " doesnt contain player");
         }
-        return p;
+
     }
 
     @Override
     public void cleanRoom(int room) {
-        roomGame.get(room).clear();
+        roomGame.get(room).resetRoom();
+    }
+
+    @Override
+    public Set<Jugador> getPlayersinRoom(int idRoom) {
+        if (!roomGame.containsKey(idRoom)) {
+            roomGame.put(idRoom, new Room());
+        }
+        return roomGame.get(idRoom).getPlayers();
+    }
+
+    @Override
+    public String getWinner(int room, Ganador gan) {
+        return roomGame.get(room).resultGame(gan);
     }
 
 }

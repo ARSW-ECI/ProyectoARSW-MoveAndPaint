@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.escuelaing.arsw.msgbroker;
 
+import com.escuelaing.arsw.msgbroker.model.Ganador;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRoomServices;
 import org.apache.log4j.Logger;
@@ -23,7 +19,7 @@ public class STOMPMessagesHandler {
 
     @Autowired
     SimpMessagingTemplate msgt;
-    
+
     @Autowired
     MoveAndPaintRoomServices services;
 
@@ -32,19 +28,26 @@ public class STOMPMessagesHandler {
     @MessageMapping("/{idRoom}/inRoom")
     public void postNewPlayerInRoom(@DestinationVariable int idRoom, Jugador player) throws Exception {
         boolean registro = services.registerPlayerRoom(idRoom, player);
-        if(registro){
-            System.out.println(idRoom);
+        if (registro) {
             //asignacion de jugadores posicion, personaje
-            msgt.convertAndSend("/topic/login."+idRoom,player);
+            msgt.convertAndSend("/topic/login." + idRoom, player);
             controlTime(idRoom);
         }
+
     }
-    
-    @MessageMapping("/initChron")
+
     public void controlTime(int idRoom) throws Exception {
-        Thread.sleep(90000);
-        services.cleanRoom(idRoom);
-        msgt.convertAndSend("/topic/endGame."+idRoom,idRoom);
+        Thread.sleep(40000);
+        msgt.convertAndSend("/topic/endGame." + idRoom, idRoom);
     }
-    
+
+    @MessageMapping("/{idRoom}/winnner")
+    public void postNewPlayerInRoom(@DestinationVariable int idRoom, Ganador player) throws Exception {
+        String win = services.getWinner(idRoom,player);
+        if (!win.equals("")) {
+            msgt.convertAndSend("/topic/wininroom." + idRoom,win);
+            services.cleanRoom(idRoom);
+        }
+    }
+
 }

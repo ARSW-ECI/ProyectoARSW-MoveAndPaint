@@ -28,7 +28,6 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/myCharacter', function (data) {
             var charUpdate = JSON.parse(data.body);
-            console.log(charUpdate['posX'] + " " + charUpdate['posY'] + " " + charUpdate['image']);
             for (var i = 0; i < rivals.length; i++) {
                 if (rivals[i].user === charUpdate['user']) {
                     rivals[i].x = charUpdate['posX'];
@@ -38,16 +37,31 @@ function connect() {
             }
 
         });
-        stompClient.subscribe('/topic/myPos.'+localStorage.getItem("idRoom"), function (data) {
+        stompClient.subscribe('/topic/myPos.' + localStorage.getItem("idRoom"), function (data) {
             var charUpdate = JSON.parse(data.body);
             var ind = charUpdate['ind'];
             var myColor = charUpdate['posColor'];
-            obstacles[ind].image.src = folderImage+"caja"+myColor+".png";
+            obstacles[ind].image.src = folderImage + "caja" + myColor + ".png";
 
         });
-        stompClient.subscribe('/topic/endGame.'+localStorage.getItem("idRoom"), function (data) {
-            alert('YA SE ACABO LA PARTIDA');
+        
+        stompClient.subscribe('/topic/wininroom.' + localStorage.getItem("idRoom"), function (data) {
+            alert(data.body);
             window.location = "../";
+
+        });
+        
+        stompClient.subscribe('/topic/endGame.' + localStorage.getItem("idRoom"), function (data) {
+            var myBoxes = 0;
+            for (var i = 0; i < obstacles.length; i++) {
+                if (obstacles[i].image.src.includes(color)) {
+                    myBoxes++;
+                }
+            }
+            console.log(myBoxes);
+            infom={"name":username,"score":myBoxes};
+            stompClient.send('/app/'+localStorage.getItem("idRoom")+'/winnner', {}, JSON.stringify(infom));
+            alert('YA SE ACABO LA PARTIDA');
         });
     });
 }
@@ -62,8 +76,7 @@ function disconnect() {
 
 
 function startGame() {
-    console.log("ASDFA "+color);
-    myGamePiece = new component(username, 50, 50, folderImage+ color + direccion + ".png", posX, posY, "image");
+    myGamePiece = new component(username, 50, 50, folderImage + color + direccion + ".png", posX, posY, "image");
     fondo = new component(1150, 650, "/resources/images/fondo1.png", 0, 0, "image");
     for (var i = 0; i < competitors.length; i++) {
         rivals.push(new component(competitors[i].name, 50, 50, folderImage + competitors[i].color + direccion + ".png", competitors[i].posX, competitors[i].posY, "image"));
@@ -71,51 +84,51 @@ function startGame() {
 
     //Floor
     for (var i = 0; i < 22; i++) {
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", i * 50, 600, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", i * 50, 600, "image"));
     }
 
     //Left wall
     for (var i = 0; i < 13; i++) {
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 0, 50 * i, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 0, 50 * i, "image"));
     }
 
     //Right wall
     for (var i = 0; i < 13; i++) {
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100, 50 * i, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 1100, 50 * i, "image"));
     }
 
     //Platform Lvl 1
     for (var i = 3; i < 7; i++) {
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 50 * i, 450, "image"));
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100 - 50 * i, 450, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 50 * i, 450, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 1100 - 50 * i, 450, "image"));
     }
 
     //Platform Triangle Form
-    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 450, 450, "image"));
-    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 650, 450, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 450, 450, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 650, 450, "image"));
 
-    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 500, 400, "image"));
-    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 600, 400, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 500, 400, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 600, 400, "image"));
 
-    obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 550, 350, "image"));
+    obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 550, 350, "image"));
 
     //Platform Lvl 2
     for (var i = 1; i < 4; i++) {
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 50 * i, 300, "image"));
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100 - (50 * i), 300, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 50 * i, 300, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 1100 - (50 * i), 300, "image"));
 
     }
 
     //Platform Lvl 3 Center
     for (var i = 0; i < 11; i++) {
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 300 + (50 * i), 150, "image"));
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 300 + (50 * i), 150, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 300 + (50 * i), 150, "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 300 + (50 * i), 150, "image"));
     }
 
     //Platform Lvl 3 Left and Right
     for (var i = 0; i < 2; i++) {
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 50 + (50 * i), 100 + (50 * i), "image"));
-        obstacles.push(new component("plataforma", 50, 50, folderImage+"caja.png", 1100 - (50 + (50 * i)), 100 + (50 * i), "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 50 + (50 * i), 100 + (50 * i), "image"));
+        obstacles.push(new component("plataforma", 50, 50, folderImage + "caja.png", 1100 - (50 + (50 * i)), 100 + (50 * i), "image"));
     }
     myGameArea.start();
 }
@@ -165,7 +178,6 @@ function component(user, width, height, color, x, y, type) {
     this.update = function () {
         ctx = myGameArea.context;
         if (type == "image") {
-            console.log(this.image+" "+this.x+" "+this.y+" "+this.width+" "+this.height);
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } else {
             ctx.fillStyle = color;
@@ -206,7 +218,7 @@ function updateGameArea() {
 
     myGamePiece.grounded = false;
     for (var i = 0; i < obstacles.length; i++) {
-        
+
         var dir = colCheck(myGamePiece, obstacles[i]);
 
         if (dir === "l" || dir === "r") {
@@ -214,8 +226,7 @@ function updateGameArea() {
             myGamePiece.jumping = false;
         } else if (dir === "b") {
             if (myGamePiece.speedY != 0 || myGamePiece.speedX != 0) {
-                console.log("entrngfd");
-                stompClient.send('/topic/myPos.'+localStorage.getItem("idRoom"),{},JSON.stringify({'ind':i,'posColor':color}));
+                stompClient.send('/topic/myPos.' + localStorage.getItem("idRoom"), {}, JSON.stringify({'ind': i, 'posColor': color}));
             }
             myGamePiece.grounded = true;
             myGamePiece.jumping = false;
@@ -234,7 +245,6 @@ function updateGameArea() {
         rivals[i].update();
     }
     if (!myGamePiece.grounded || myGamePiece.speedY != 0 || myGamePiece.speedX != 0) {
-        console.log(myGamePiece.grounded+" , "+myGamePiece.speedY+" , "+myGamePiece.speedX);
         stompClient.send('/topic/myCharacter', {}, JSON.stringify({'user': myGamePiece.user, 'posX': myGamePiece.x, 'posY': myGamePiece.y, 'image': myGamePiece.image.src}));
     }
 
@@ -337,7 +347,7 @@ $(document).ready(
                 clearmove();
             }, false);
 
-            $.get("/otros/salas/"+localStorage.getItem("idRoom"), function (data) {
+            $.get("/otros/participantsinroom/" + localStorage.getItem("idRoom"), function (data) {
                 for (var i in data) {
                     if (data[i].name == username) {
                         color = data[i].color;
@@ -348,7 +358,7 @@ $(document).ready(
                     }
                 }
                 startGame();
-                
+
             });
         }
 );

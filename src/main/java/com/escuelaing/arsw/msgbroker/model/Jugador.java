@@ -1,16 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.escuelaing.arsw.msgbroker.model;
 
 /**
  *
- * @author Carlos
+ * @author Carlos Alberto Ramirez Otero
  */
 public class Jugador implements Comparable<Jugador>{
-    int posX,posY;
+    int posX,posY,puntajeAcumulado;
     String color,name,email;
 
     public Jugador(int posX, int posY, String color, String name, String email) {
@@ -63,6 +58,14 @@ public class Jugador implements Comparable<Jugador>{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getPuntajeAcumulado() {
+        return puntajeAcumulado;
+    }
+
+    public void setPuntajeAcumulado(int puntajeAcumulado) {
+        this.puntajeAcumulado = puntajeAcumulado;
     }
     
     @Override

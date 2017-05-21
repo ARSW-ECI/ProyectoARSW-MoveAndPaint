@@ -7,7 +7,6 @@ package com.escuelaing.arsw.msgbroker.services;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +41,9 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
             players.add(jugadorMovePaint);
         }
     }
-
-    
     
     @Override
-    public Set<Jugador> getPlayerRegistered() throws ServicesException {
+    public Set<Jugador> getPlayersRegistered() throws ServicesException {
         if(players.isEmpty()){
             throw new ServicesException("Any player registered!!");
         }
@@ -58,6 +55,16 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
         for (Jugador player : players) {
             if(player.getName().equals(username)){
                 return player;
+            }
+        }
+        throw new ServicesException("Player not found!");
+    }
+
+    @Override
+    public void addScorePlayer(String name, int score) throws ServicesException {
+        for (Jugador player : players) {
+            if(player.getName().equals(name)){
+                player.setPuntajeAcumulado(player.getPuntajeAcumulado()+score);
             }
         }
         throw new ServicesException("Player not found!");

@@ -5,20 +5,20 @@
  */
 package com.escuelaing.arsw.msgbroker.services;
 
+import com.escuelaing.arsw.msgbroker.model.Ganador;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author Carlos Alberto Ramirez Otero
  */
 public interface MoveAndPaintRoomServices {
-    int MAX_PLAYERS = 3;
+    int MAX_PLAYERS = 2;
     
     public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException;
-    public Set<Jugador> getJug();
-    public Jugador getJugador(String username);
+    public Jugador getJugador(int idRoom, String username) throws ServicesException;
+    public Set<Jugador> getPlayersinRoom(int idRoom) throws ServicesException;
     public void cleanRoom(int room);
-    public ConcurrentHashMap<Integer, Set<Jugador>> getRoomGame();
+    public String getWinner(int room, Ganador gan);
 }

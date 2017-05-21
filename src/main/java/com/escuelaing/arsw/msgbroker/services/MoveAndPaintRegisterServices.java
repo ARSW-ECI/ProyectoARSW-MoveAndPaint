@@ -15,6 +15,7 @@ import java.util.Set;
 public interface MoveAndPaintRegisterServices {
     
     public void registerPlayer(Jugador jugadorMovePaint) throws ServicesException;
-    public Set<Jugador> getPlayerRegistered() throws ServicesException;
+    public Set<Jugador> getPlayersRegistered() throws ServicesException;
     public Jugador getPlayerRegistered(String username)throws ServicesException;
+    public void addScorePlayer(String name,int score)throws ServicesException;
 }
