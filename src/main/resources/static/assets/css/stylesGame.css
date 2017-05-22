@@ -161,14 +161,14 @@ a:hover { text-decoration:underline; }
 
 #contenedor{
  margin: 10px auto;
- width: 540px;
+ width: 590px;
  height: 115px;
 }
 
 .reloj{
  float: left;
- font-size: 80px;
- font-family: Courier,sans-serif;
+ font-size: 60px;
+ font-family: Arial,sans-serif;
  color: #FFFFFF;
 }
 

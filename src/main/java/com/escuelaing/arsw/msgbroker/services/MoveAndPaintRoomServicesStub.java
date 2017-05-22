@@ -34,7 +34,7 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
     public MoveAndPaintRoomServicesStub() {
         roomGame = new ConcurrentHashMap<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 1; i < 21; i++) {
             roomGame.put(i, new Room());
         } 
     }

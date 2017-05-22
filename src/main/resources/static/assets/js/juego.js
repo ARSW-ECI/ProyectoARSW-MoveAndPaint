@@ -335,7 +335,7 @@ function cronometro() {
         if (segundos < 10) {
             segundos = "0" + segundos
         }
-        Segundos.innerHTML = "Tiempo de juego :" + segundos;
+        Segundos.innerHTML = "Tiempo "+minutos+":" + segundos;
     }
     if (segundos == 59) {
         segundos = -1;
@@ -345,6 +345,7 @@ function cronometro() {
         if (minutos < 10) {
             minutos = "0" + minutos
         }
+        Segundos.innerHTML = "Tiempo "+minutos+":" + segundos;
     }
     if (minutos == 59) {
         minutos = -1;
@@ -370,8 +371,8 @@ $(document).ready(
             color = coloresJugadores[randomcolor];
 
             $("#estilo").append("canvas {\n\
-            height: 80%;\n\
-            width: 80%;\n\
+            height: 75%;\n\
+            width: 75%;\n\
             border:1px solid #d3d3d3;\n\
             background-color: #f1f1f1;}");
             $("#formulario").remove();
