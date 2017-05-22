@@ -64,7 +64,7 @@ public class Room {
                         ganador = "Hubo empate en la partida!!!";
                     } else if (premio < ganadores.get(i).getScore()) {
                         premio = ganadores.get(i).getScore();
-                        ganador = "El ganador fue: " + ganadores.get(i).getName() + " con: " + ganadores.get(i).getScore() + " numero de plataformas pintadas!!!";
+                        ganador = "El ganador fue " + ganadores.get(i).getName() + " con " + ganadores.get(i).getScore() + " plataformas pintadas!!!";
                     }
                 }
             }

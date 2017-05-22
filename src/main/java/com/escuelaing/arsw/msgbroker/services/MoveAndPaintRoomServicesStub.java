@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
     ConcurrentHashMap<Integer, Room> roomGame;
-    String[] posiciones = {"170 250 Rojo", "930 250 Morado", "170 390 Verde", "930 390 Azul", "170 250 Amarillo", "930 250 Fantasma", "170 390 Naranja", "930 390 Sasuke"};
+    String[] posiciones = {"170 250 Amarillo", "930 250 Fantasma","170 250 Rojo", "930 250 Morado", "170 390 Verde", "930 390 Azul", "170 390 Naranja", "930 390 Sasuke"};
 
     public String[] getPosiciones() {
         return posiciones;

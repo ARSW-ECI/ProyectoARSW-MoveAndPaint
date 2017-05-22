@@ -1,55 +1,146 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 
 <html>
-    <head>
-        <title>Move and paint</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="resources/css/styles.css">
-        <script src="/webjars/jquery/jquery.min.js"></script>
-        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-        <script src="resources/js/app.js"></script>
+	<head>
+		<title>ARSW-MOVEANDPAINT</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body class="landing">
+		<div id="page-wrapper">
 
-        <style id="estilo">
+			<!-- Header -->
+				<header id="header">
+					<h1 id="logo"><a href="index.html">Landed</a></h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li><a href="#" class="button special">Sign Up</a></li>
+						</ul>
+					</nav>
+				</header>
 
-        </style>
-    </head>
-    <body id="cuerpo">
-        <div id="titulo">
-            Move and paint
-        </div>
-        <form name=login class="formulario"> 
-            <label>Iniciar sesión</label>
-            <br>
-            <label>Usuario:</label>
-            <input type=text name=username id="nombre" class="texto"> 
-            <br>
-            <label>Contrase&ntilde;a:</label>
-            <input type=password name=password id="passwordlogin" class="texto"> 
-            <br>
-            <label>Sala:</label>
-            <input type=Number name=room id="room" value="1" class="texto"> 
-            <br>
-            <input type=button class="button" value="Entrar" onClick="Login()"> 
-        </form> 
-        <form  class="formulario2">
-            Registrar nuevo usuario
-            <br>
-            <p>Nombre Usuario:
-                <input id="usuario" type="text"/>
-                <br>
-                Correo: <input id="email" type="text"/>
-                <br>
-                Clave:
-                <input id="password" type="password"  maxlength="8"  />
-            </p>
-            <p>Repite tu clave:
-                <input id="password2" type="password"  maxlength="8"  />
-                <br>
-            </p>
-            <input type=button class="button" value="Registrar" onClick="registrar()"> 
-        </form>
+			<!-- Banner -->
+				<section id="banner">
+					<div class="content">
+						<header>
+							<h2>MOVE-AND-PAINT</h2>
+							<p>A videogame created to have a<br />
+							good time with friends.
+							</p>
+						</header>
+						<span class="image"><img src="images/pic01.jpg" alt="" /></span>
+					</div>
+					<a href="#one" class="goto-next scrolly">Next</a>
+				</section>
 
-    </body>
+			<!-- One -->
+				<section id="one" class="spotlight style1 bottom">
+					<span class="image fit main"><img src="images/pic02.jpg" alt="" /></span>
+					<div class="content">
+						<div class="container">
+							<div class="row">
+								<div>
+									<header>
+										<h2>WHAT IS MOVE-AND-PAINT?</h2>
+										<p>It´s a game created by Carlos Iván Morera Gómez, Ricardo Ándres Pinto Rico and Carlos Alberto Ramirez Otero</p>
+									</header>
+								</div>
+								<div>
+									<p>MoveAndPaint is a multiplayer game in which 4 participants must paint the largest number of platforms composed of blocks and will gain who owns more for 40 seconds.</p>
+								</div>
+								<div>
+									<p>It´s deploy in Heroku: https://arsw-project.herokuapp.com/ and Amazon Web Services.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a href="#two" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Two -->
+				<section id="two" class="spotlight style2 right">
+					<span class="image fit main"><img src="images/pic03.jpg" alt="" /></span>
+					<div class="content">
+						<header>
+							<h3>LOGIN</h3>
+							<p>If you have an account:</p>
+							<label>USER:</label>
+							<input type=text name=username id="nombre" class="texto"> 
+							<br>
+							<label>PASSWORD:</label>
+							<input type=password name=password id="passwordlogin" class="texto"> 
+							<br>
+							<label>ROOM (INTRODUCE A NUMBER PLEASE):</label>
+							<input type=text name=room id="room" value="1"> 
+							<br>
+							<input type=button class="button" value="Login" onClick="Login()"> 
+							<br>
+							<br>
+						</header>
+
+					</div>
+					<a href="#three" class="goto-next scrolly">Next</a>
+				</section>
+
+			<!-- Three -->
+				<section id="three" class="spotlight style3 left">
+					<span class="image fit main bottom"><img src="images/pic04.jpg" alt="" /></span>
+					<div class="content">
+						<header>
+							<h3>CREATE A NEW ACCOUNT</h3>
+							<p>
+								USERNAME:
+								<input id="usuario" type="text"/>
+								<br>
+								EMAIL: <input id="email" type="text"/>
+								<br>
+								PASSWORD:
+								<input id="password" type="password"  maxlength="8"  />
+							</p>
+							<p>
+								CONFIRM PASSWORD:
+								<input id="password2" type="password"  maxlength="8"  />
+
+							</p>
+							<input type=button class="button" value="Register" onClick="registrar()"> 
+						</header>
+					</div>
+				</section>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="https://twitter.com/escuelaing?lang=es" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="https://www.facebook.com/EscuelaIng/" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="https://www.linkedin.com/edu/escuela-colombiana-de-ingenier%C3%ADa-%27julio-garavito%27-11508" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+						<li><a href="https://www.instagram.com/escuelaing/" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="https://github.com/Carlosalbertoramirezotero29/ProyectoARSW-MoveAndPaint" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+			<script src="/webjars/jquery/jquery.min.js"></script>
+			<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+			<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+			<script src="assets/js/app.js"></script>
+
+	</body>
 </html>
