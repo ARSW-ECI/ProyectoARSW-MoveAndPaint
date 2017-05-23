@@ -8,13 +8,12 @@ package com.escuelaing.arsw.msgbroker.services;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Carlos
  */
-@Service
+//@Service
 public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterServices {
 
     
@@ -22,15 +21,14 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
 
     public MoveAndPaintRegisterServicesStub() {
         players = new ConcurrentSkipListSet<>();
-        Jugador j1 = new Jugador(0,0,"image","ricardo","ricardo@mail.com");
-        Jugador j2 = new Jugador(10,0,"asd","carlos","carlos@mail.com");
-        Jugador j3 = new Jugador(10,10,"qwe","juan","juan@mail.com");
-        Jugador j4 = new Jugador(0,10,"zxc","mateo","mateo@mail.com");
+        Jugador j1 = new Jugador(0,0,"image","ricardo","ricardo@mail.com",false);
+        Jugador j2 = new Jugador(10,0,"asd","carlos","carlos@mail.com",false);
+        Jugador j3 = new Jugador(10,10,"qwe","juan","juan@mail.com",false);
+        Jugador j4 = new Jugador(0,10,"zxc","mateo","mateo@mail.com",false);
         players.add(j1);
         players.add(j2);
         players.add(j3);
         players.add(j4);
-        
     }
 
     @Override
@@ -39,6 +37,9 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
             throw new ServicesException("Player "+jugadorMovePaint.getName()+" already registered");
         }else{
             players.add(jugadorMovePaint);
+            MoveAndPaintRegisterServicesMongoDB fjds = new MoveAndPaintRegisterServicesMongoDB();
+            //fjds.registerPlayer(jugadorMovePaint);
+            fjds.getPlayersRegistered();
         }
     }
     
@@ -68,6 +69,15 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
             }
         }
         throw new ServicesException("Player not found!");
+    }
+
+    @Override
+    public void changeGameState(Jugador j, boolean b) {
+        for (Jugador player : players) {
+            if(player.getName().equals(j.getName())){
+                player.setIsPlaying(b);
+            }
+        }
     }
 
 }

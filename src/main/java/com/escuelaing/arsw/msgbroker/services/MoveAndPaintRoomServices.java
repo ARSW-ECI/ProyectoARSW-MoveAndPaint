@@ -20,5 +20,6 @@ public interface MoveAndPaintRoomServices {
     public Jugador getJugador(int idRoom, String username) throws ServicesException;
     public Set<Jugador> getPlayersinRoom(int idRoom) throws ServicesException;
     public void cleanRoom(int room);
+    public void resetPlayers(int room);
     public String getWinner(int room, Ganador gan);
 }

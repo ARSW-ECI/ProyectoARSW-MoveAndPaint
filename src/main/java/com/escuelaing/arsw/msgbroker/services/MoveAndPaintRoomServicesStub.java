@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,7 +23,10 @@ import org.springframework.stereotype.Service;
 public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
 
     ConcurrentHashMap<Integer, Room> roomGame;
-    String[] posiciones = {"170 250 Amarillo", "930 250 Fantasma","170 250 Rojo", "930 250 Morado", "170 390 Verde", "930 390 Azul", "170 390 Naranja", "930 390 Sasuke"};
+    String[] posiciones = {"170 250 Amarillo", "930 250 Fantasma", "170 250 Rojo", "930 250 Morado", "170 390 Verde", "930 390 Azul", "170 390 Naranja", "930 390 Sasuke"};
+
+    @Autowired
+    MoveAndPaintRegisterServices participants;
 
     public String[] getPosiciones() {
         return posiciones;
@@ -36,23 +40,26 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
         roomGame = new ConcurrentHashMap<>();
         for (int i = 1; i < 21; i++) {
             roomGame.put(i, new Room());
-        } 
+        }
     }
 
     @Override
-    public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException {
+    public boolean registerPlayerRoom(int idRoom, Jugador player){
         synchronized (roomGame.get(idRoom)) {
             if (roomGame.get(idRoom).getPlayers().size() < MAX_PLAYERS) {
-                if (roomGame.get(idRoom).getPlayers().contains(player)) {
-                    throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
-                } else {
-                    player.setPosX(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[0]));
-                    player.setPosY(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[1]));
-                    player.setColor(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[2]);
-                    roomGame.get(idRoom).setActual(roomGame.get(idRoom).getActual() + 1);
-                    roomGame.get(idRoom).getPlayers().add(player);
-                    if (roomGame.get(idRoom).getPlayers().size() == MAX_PLAYERS) {
-                        return true;
+                synchronized (player) {
+                    if (roomGame.get(idRoom).getPlayers().contains(player) || player.getIsPlaying()) {
+                        Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, "Usuario ya registrado en una sala o esta jugando!!");
+                    } else {
+                        player.setPosX(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[0]));
+                        player.setPosY(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[1]));
+                        player.setColor(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[2]);
+                        participants.changeGameState(player, true);
+                        roomGame.get(idRoom).setActual(roomGame.get(idRoom).getActual() + 1);
+                        roomGame.get(idRoom).getPlayers().add(player);
+                        if (roomGame.get(idRoom).getPlayers().size() == MAX_PLAYERS) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -77,9 +84,17 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
         }
 
     }
+    
+    @Override
+    public void resetPlayers(int room){
+        for (Jugador player : roomGame.get(room).getPlayers()) {
+            participants.changeGameState(player, false);
+        }
+    }
 
     @Override
     public void cleanRoom(int room) {
+        resetPlayers(room);
         roomGame.get(room).resetRoom();
     }
 

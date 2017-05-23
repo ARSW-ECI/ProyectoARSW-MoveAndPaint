@@ -5,15 +5,17 @@ package com.escuelaing.arsw.msgbroker.model;
  * @author Carlos Alberto Ramirez Otero
  */
 public class Jugador implements Comparable<Jugador>{
-    int posX,posY,puntajeAcumulado;
-    String color,name,email;
+    private int posX,posY,puntajeAcumulado;
+    private String color,name,email;
+    private boolean isPlaying;
 
-    public Jugador(int posX, int posY, String color, String name, String email) {
+    public Jugador(int posX, int posY, String color, String name, String email,boolean isPlaying) {
         this.posX = posX;
         this.posY = posY;
         this.color = color;
         this.name = name;
         this.email = email;
+        this.isPlaying = isPlaying;
     }
 
     public Jugador() {
@@ -67,7 +69,15 @@ public class Jugador implements Comparable<Jugador>{
     public void setPuntajeAcumulado(int puntajeAcumulado) {
         this.puntajeAcumulado = puntajeAcumulado;
     }
-    
+
+    public boolean getIsPlaying() {
+        return isPlaying;
+    }
+
+    public void setIsPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
+    }
+        
     @Override
     public int compareTo(Jugador o) {
         if(o.getName().equals(this.name) || o.getEmail().equals(this.email)){

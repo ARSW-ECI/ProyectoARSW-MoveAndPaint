@@ -18,4 +18,5 @@ public interface MoveAndPaintRegisterServices {
     public Set<Jugador> getPlayersRegistered() throws ServicesException;
     public Jugador getPlayerRegistered(String username)throws ServicesException;
     public void addScorePlayer(String name,int score)throws ServicesException;
+    public void changeGameState(Jugador j, boolean b);
 }

@@ -64,6 +64,13 @@ function Login() {
     }
 }
 
+function limpiar(){
+    document.getElementById("usuario").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("password2").value = "";
+}
+
 function registrar() {
     var nombre = document.getElementById("usuario").value;
     var email = document.getElementById("email").value;
@@ -95,6 +102,7 @@ function registrar() {
             postPromise.then(
                     function () {
                         console.info("OK");
+                        limpiar();
                         alert("SUS DATOS HAN SIDO REGISTRADOS CORRECTAMENTE!!");
 
                     },

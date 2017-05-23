@@ -6,7 +6,6 @@
 package com.escuelaing.arsw.msgbroker.test;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
-import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRegisterServices;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRegisterServicesStub;
 import com.escuelaing.arsw.msgbroker.services.ServicesException;
 import java.util.logging.Level;
@@ -31,7 +30,7 @@ import org.junit.Test;
 
 public class MoveAndPaintRegisterTest {
     
-    private MoveAndPaintRegisterServices registerTest;
+    private MoveAndPaintRegisterServicesStub registerTest;
     
     @Before
     public void setUp(){
@@ -40,9 +39,9 @@ public class MoveAndPaintRegisterTest {
     
     @Test
     public void CE1() throws ServicesException{
-        Jugador j1 = new Jugador(0, 0, null, "carlos", "carlos@mail.com");
-        Jugador j2 = new Jugador(0, 0, null, "mateoxd", "mateo@mail.com");
-        Jugador j3 = new Jugador(0, 0, null, "Leonardo", "leonardo@mail.com");
+        Jugador j1 = new Jugador(0, 0, "image1", "carlos", "carlos@mail.com",false);
+        Jugador j2 = new Jugador(0, 0, "image2", "mateoxd", "mateo@mail.com",false);
+        Jugador j3 = new Jugador(0, 0, "image3", "Leonardo", "leonardo@mail.com",false);
         try {
             registerTest.registerPlayer(j1);
             registerTest.registerPlayer(j2);
