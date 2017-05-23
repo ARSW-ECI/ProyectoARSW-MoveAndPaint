@@ -40,7 +40,7 @@ public class MoveAndPaintRegisterTest {
     public void CE1() throws ServicesException, Exception {
         HashSalt hs = PasswordUtil.getHash("asd");
         String pass = hs.getHash() + hs.getSalt();
-        Jugador j1 = new Jugador(0, 0, null, "carlos", "carlos@mail.com",false, pass, hs.getSalt());
+        Jugador j1 = new Jugador(0, 0, null, "carlitos", "carlitos@mail.com",false, pass, hs.getSalt());
         Jugador j2 = new Jugador(0, 0, null, "mateoxd", "mateo@mail.com",false, pass, hs.getSalt());
         Jugador j3 = new Jugador(0, 0, null, "Leonardo", "leonardo@mail.com",false, pass, hs.getSalt());
         try {
@@ -49,9 +49,9 @@ public class MoveAndPaintRegisterTest {
         } catch (ServicesException ex) {
             Logger.getLogger(MoveAndPaintRegisterTest.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
-        assertEquals("Deberian haber 4 jugadores registrados", registerTest.getPlayersRegistered().size(), 4);
-        registerTest.registerPlayer(j3);
         assertEquals("Deberian haber 5 jugadores registrados", registerTest.getPlayersRegistered().size(), 5);
+        registerTest.registerPlayer(j3);
+        assertEquals("Deberian haber 6 jugadores registrados", registerTest.getPlayersRegistered().size(), 6);
 
     }
 }
