@@ -34,7 +34,7 @@ public class MoveAndPaintRESTRoomController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     @RequestMapping(path = "/participantsinroom/{idRoom}", method = RequestMethod.GET)
     public ResponseEntity<?> getPlayer(@PathVariable int idRoom) {
         try {
@@ -48,6 +48,11 @@ public class MoveAndPaintRESTRoomController {
     @RequestMapping(path = "/{idSala}/colaboradores", method = RequestMethod.POST)
     public ResponseEntity<?> registerInRoom(@PathVariable int idSala, @RequestBody Jugador player) {
         try {
+
+            System.out.println("................................................");
+            System.out.println(player.getPass());
+            System.out.println(player.getSalt());
+            System.out.println("................................................");
             services.registerPlayerRoom(idSala, player);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ServicesException ex) {

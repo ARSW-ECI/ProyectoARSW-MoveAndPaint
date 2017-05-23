@@ -1,6 +1,8 @@
 package com.escuelaing.arsw.msgbroker.services;
 
 import com.escuelaing.arsw.msgbroker.model.Jugador;
+import com.escuelaing.arsw.msgbroker.security.HashSalt;
+import com.escuelaing.arsw.msgbroker.security.PasswordUtil;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBList;
 import java.util.Set;
@@ -49,8 +51,9 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
         Gson gson = new Gson();
 
         BasicDBObject doc = new BasicDBObject("posX", jugadorMovePaint.getPosX()).append("posY", jugadorMovePaint.getPosY()).append("puntajeAcumulado", jugadorMovePaint.getPuntajeAcumulado())
-                .append("color", jugadorMovePaint.getColor()).append("name", jugadorMovePaint.getName()).append("email", jugadorMovePaint.getEmail()).append("isPlaying", jugadorMovePaint.getIsPlaying());
+                .append("color", jugadorMovePaint.getColor()).append("name", jugadorMovePaint.getName()).append("email", jugadorMovePaint.getEmail()).append("isPlaying", jugadorMovePaint.getIsPlaying()).append("pass", jugadorMovePaint.getPass()).append("salt", jugadorMovePaint.getSalt());
 
+        
         coll.insert(doc);
 
         client.close();
@@ -74,7 +77,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
 
         while (cursor.hasNext()) {
             DBObject getPlayer = cursor.next();
-            players.add(new Jugador(Integer.parseInt(getPlayer.get("posX").toString()), Integer.parseInt(getPlayer.get("posY").toString()), getPlayer.get("color").toString(), getPlayer.get("name").toString(), getPlayer.get("email").toString(), Boolean.parseBoolean(getPlayer.get("isPlaying").toString())));
+            players.add(new Jugador(Integer.parseInt(getPlayer.get("posX").toString()), Integer.parseInt(getPlayer.get("posY").toString()), getPlayer.get("color").toString(), getPlayer.get("name").toString(), getPlayer.get("email").toString(), Boolean.parseBoolean(getPlayer.get("isPlaying").toString()), getPlayer.get("pass").toString(),getPlayer.get("salt").toString()));
             i++;
         }
 
@@ -100,7 +103,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
 
         while (cursor.hasNext()) {
             DBObject getPlayer = cursor.next();
-            return new Jugador(Integer.parseInt(getPlayer.get("posX").toString()), Integer.parseInt(getPlayer.get("posY").toString()), getPlayer.get("color").toString(), getPlayer.get("name").toString(), getPlayer.get("email").toString(), Boolean.parseBoolean(getPlayer.get("isPlaying").toString()));
+            return new Jugador(Integer.parseInt(getPlayer.get("posX").toString()), Integer.parseInt(getPlayer.get("posY").toString()), getPlayer.get("color").toString(), getPlayer.get("name").toString(), getPlayer.get("email").toString(), Boolean.parseBoolean(getPlayer.get("isPlaying").toString()), getPlayer.get("pass").toString(),getPlayer.get("salt").toString());
         }
 
         throw new ServicesException("Player not found!");
@@ -131,9 +134,11 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
 
     }
 
-    public MoveAndPaintRegisterServicesMongoDB() {
-        Jugador j1 = new Jugador(0, 0, "image", "ricardo", "ricardo@mail.com", false);
-        Jugador j2 = new Jugador(10, 0, "asd", "carlos", "carlos@mail.com", false);
+    public MoveAndPaintRegisterServicesMongoDB() throws Exception {
+        HashSalt hs = PasswordUtil.getHash("asd");
+        String pass = hs.getHash();
+        Jugador j1 = new Jugador(0, 0, "image", "ricardo", "ricardo@mail.com",false, pass, hs.getSalt());
+        Jugador j2 = new Jugador(10, 0, "asd", "carlos", "carlos@mail.com",false, pass, hs.getSalt());
 
         try {
             registerPlayer(j1);

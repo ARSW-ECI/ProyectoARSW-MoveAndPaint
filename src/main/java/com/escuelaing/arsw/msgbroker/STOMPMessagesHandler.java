@@ -27,6 +27,7 @@ public class STOMPMessagesHandler {
 
     @MessageMapping("/{idRoom}/inRoom")
     public void postNewPlayerInRoom(@DestinationVariable int idRoom, Jugador player) throws Exception {
+        
         boolean registro = services.registerPlayerRoom(idRoom, player);
         if (registro) {
             //asignacion de jugadores posicion, personaje

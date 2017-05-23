@@ -32,18 +32,17 @@ function Login() {
             localStorage.setItem('idRoom', roomid);
 
             var promise = $.get("/games/" + username + "/participants");
-
+           
             promise.then(
                     function (data) {
-
                         stompClient.subscribe('/topic/login.' + roomid, function (data) {
                             window.location = "/game/juego.html";
                         });
-
-                        stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data));
-
+                        data["pass"]=password;
+                        stompClient.send("/app/" + roomid + "/inRoom", {}, JSON.stringify(data),password);
+                        
                         var getuserpromise = $.get("/otros/participantinroom/" + username + "/" + roomid);
-
+                        
                         getuserpromise.then(
                                 function (data) {
                                     alert("EL USUARIO ACABA DE REGISTARSE EN LA SALA O YA ESTA EN COLA!!!");
@@ -54,7 +53,7 @@ function Login() {
                         );
                     },
                     function () {
-                        alert("ERROR AL ENTRAR EN COLA A LA PARTIDA!!");
+                        alert("ERROR AL ENTRAR EN COLA A LA PARTIDA, REVISA TU USUARIO Y CONTRASEÑA!!");
                     }
             );
         }
@@ -76,7 +75,7 @@ function registrar() {
     var email = document.getElementById("email").value;
     var pass = document.getElementById("password").value;
     var pass2 = document.getElementById("password2").value;
-
+    
     if (nombre == "" || pass == "" || pass2 == "") {
         alert("LLENE TODOS LOS CAMPOS!!");
     } else {
@@ -90,7 +89,9 @@ function registrar() {
                 "puntajeActual": 0,
                 "puntajeAcumulado": 0,
                 "color": "",
-                "email": email
+                "email": email,
+                "pass" :pass,
+                "salt" :"$"
             };
             var postPromise = $.ajax({
                 url: "/games/participants",
@@ -98,7 +99,6 @@ function registrar() {
                 data: JSON.stringify(jugador),
                 contentType: "application/json"
             });
-
             postPromise.then(
                     function () {
                         console.info("OK");

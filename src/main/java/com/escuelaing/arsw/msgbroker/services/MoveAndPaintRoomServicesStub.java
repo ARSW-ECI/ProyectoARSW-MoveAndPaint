@@ -8,6 +8,7 @@ package com.escuelaing.arsw.msgbroker.services;
 import com.escuelaing.arsw.msgbroker.model.Ganador;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.model.Room;
+import com.escuelaing.arsw.msgbroker.security.*;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -44,22 +45,34 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
     }
 
     @Override
-    public boolean registerPlayerRoom(int idRoom, Jugador player){
+    public boolean registerPlayerRoom(int idRoom, Jugador player) throws ServicesException{
         synchronized (roomGame.get(idRoom)) {
+            String passVerdadera = participants.getPlayerRegistered(player.getName()).getPass();
+            String sal = participants.getPlayerRegistered(player.getName()).getSalt();
+            String passNueva = player.getPass();
+            HashSalt hs;
+            boolean isValid = false;
+            try {
+                hs = PasswordUtil.getHash(player.getPass() + sal);
+                isValid = PasswordUtil.ValidatePass(passNueva, passVerdadera, sal);
+            } catch (Exception ex) {
+                Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (roomGame.get(idRoom).getPlayers().size() < MAX_PLAYERS) {
-                synchronized (player) {
-                    if (roomGame.get(idRoom).getPlayers().contains(player) || player.getIsPlaying()) {
-                        Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, "Usuario ya registrado en una sala o esta jugando!!");
-                    } else {
-                        player.setPosX(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[0]));
-                        player.setPosY(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[1]));
-                        player.setColor(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[2]);
-                        participants.changeGameState(player, true);
-                        roomGame.get(idRoom).setActual(roomGame.get(idRoom).getActual() + 1);
-                        roomGame.get(idRoom).getPlayers().add(player);
-                        if (roomGame.get(idRoom).getPlayers().size() == MAX_PLAYERS) {
-                            return true;
-                        }
+                if (!isValid) {
+                    throw new ServicesException("Incorrect password");
+                } else if (roomGame.get(idRoom).getPlayers().contains(player)) {
+                    throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
+                } else {
+                    player.setPosX(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[0]));
+                    player.setPosY(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[1]));
+                    player.setColor(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[2]);
+                    roomGame.get(idRoom).setActual(roomGame.get(idRoom).getActual() + 1);
+                    player.setPass(passVerdadera);
+                    player.setSalt(sal);
+                    roomGame.get(idRoom).getPlayers().add(player);
+                    if (roomGame.get(idRoom).getPlayers().size() == MAX_PLAYERS) {
+                        return true;
                     }
                 }
             }
