@@ -49,10 +49,7 @@ public class MoveAndPaintRESTRoomController {
     public ResponseEntity<?> registerInRoom(@PathVariable int idSala, @RequestBody Jugador player) {
         try {
 
-            System.out.println("................................................");
-            System.out.println(player.getPass());
-            System.out.println(player.getSalt());
-            System.out.println("................................................");
+
             services.registerPlayerRoom(idSala, player);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ServicesException ex) {

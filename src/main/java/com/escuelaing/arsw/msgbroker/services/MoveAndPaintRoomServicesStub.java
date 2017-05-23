@@ -5,6 +5,7 @@
  */
 package com.escuelaing.arsw.msgbroker.services;
 
+import com.escuelaing.arsw.msgbroker.controllers.MoveAndPaintRESTController;
 import com.escuelaing.arsw.msgbroker.model.Ganador;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.model.Room;
@@ -60,9 +61,11 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
             }
             if (roomGame.get(idRoom).getPlayers().size() < MAX_PLAYERS) {
                 if (!isValid) {
-                    throw new ServicesException("Incorrect password");
-                } else if (roomGame.get(idRoom).getPlayers().contains(player)) {
-                    throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
+                    Exception e = new ServicesException("Incorrect password");
+                    Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+                } else if (roomGame.get(idRoom).getPlayers().contains(player) || player.getIsPlaying()) {
+                    Exception e = new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
+                    Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
                 } else {
                     player.setPosX(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[0]));
                     player.setPosY(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[1]));
@@ -70,6 +73,7 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
                     roomGame.get(idRoom).setActual(roomGame.get(idRoom).getActual() + 1);
                     player.setPass(passVerdadera);
                     player.setSalt(sal);
+                    participants.changeGameState(player, true);
                     roomGame.get(idRoom).getPlayers().add(player);
                     if (roomGame.get(idRoom).getPlayers().size() == MAX_PLAYERS) {
                         return true;
@@ -93,7 +97,9 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
                     return player;
                 }
             }
-            throw new ServicesException("Room #" + idRoom + " doesnt contain player");
+            Exception e = new ServicesException("Room #" + idRoom + " doesnt contain player");
+            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+            return null;
         }
 
     }

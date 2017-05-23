@@ -5,6 +5,7 @@
  */
 package com.escuelaing.arsw.msgbroker.services;
 
+import com.escuelaing.arsw.msgbroker.controllers.MoveAndPaintRESTController;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.security.HashSalt;
 import com.escuelaing.arsw.msgbroker.security.PasswordUtil;
@@ -39,7 +40,8 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
     @Override
     public void registerPlayer(Jugador jugadorMovePaint) throws ServicesException {
         if (players.contains(jugadorMovePaint)) {
-            throw new ServicesException("Player " + jugadorMovePaint.getName() + " already registered");
+            Exception e= new ServicesException("Player " + jugadorMovePaint.getName() + " already registered");
+            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
         } else {
             try {
                 String pass = jugadorMovePaint.getPass();
@@ -64,7 +66,8 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
     @Override
     public Set<Jugador> getPlayersRegistered() throws ServicesException {
         if (players.isEmpty()) {
-            throw new ServicesException("Any player registered!!");
+            Exception e= new ServicesException("Any player registered!!");
+            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
         }
         return players;
     }
@@ -76,7 +79,9 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
                 return player;
             }
         }
-        throw new ServicesException("Player not found!");
+        Exception e= new ServicesException("Player not found!");
+        Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+        return null;
     }
 
     @Override
@@ -86,7 +91,8 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
                 player.setPuntajeAcumulado(player.getPuntajeAcumulado() + score);
             }
         }
-        throw new ServicesException("Player not found!");
+        Exception e= new ServicesException("Player not found!");
+        Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
     }
 
     @Override

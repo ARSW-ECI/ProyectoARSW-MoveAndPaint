@@ -5,11 +5,14 @@
  */
 package com.escuelaing.arsw.msgbroker.security;
 
+import com.escuelaing.arsw.msgbroker.controllers.MoveAndPaintRESTController;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
@@ -44,7 +47,9 @@ public class PasswordUtil {
 	    System.out.println(e.getMessage());
 	}
 		
-	throw new Exception("No se pudo crear hash");
+	Exception e= new Exception("No se pudo crear hash");
+        Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+        return null;
     }
 	
     public static boolean ValidatePass(String password, String stringHash, String stringSalt) {
