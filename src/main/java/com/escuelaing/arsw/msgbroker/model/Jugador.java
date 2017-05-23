@@ -7,7 +7,7 @@ package com.escuelaing.arsw.msgbroker.model;
 public class Jugador implements Comparable<Jugador> {
 
     private int posX, posY, puntajeAcumulado;
-    String color, name, email, pass, salt;
+    private String color, name, email, pass, salt;
     private boolean isPlaying;
 
     public Jugador(int posX, int posY, String color, String name, String email, boolean isPlaying, String pass, String salt) {
@@ -99,10 +99,11 @@ public class Jugador implements Comparable<Jugador> {
 
     @Override
     public int compareTo(Jugador o) {
-        if (o.getName().equals(this.name) || o.getEmail().equals(this.email)) {
+        if (o.getName().compareTo(this.name)==0) {
             return 0;
+        }else{
+            return 1;
         }
-        return 1;
     }
 
 }
