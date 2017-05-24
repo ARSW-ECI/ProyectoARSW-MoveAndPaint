@@ -34,7 +34,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
 
         DB db = client.getDB("arsw-projectmoveandpaint");
 
-        DBCollection coll = db.getCollection("Players");
+        DBCollection coll = db.getCollection("HerokuDB");
 
         BasicDBObject whereQuery = new BasicDBObject();
 
@@ -75,7 +75,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
 
         DB db = client.getDB("arsw-projectmoveandpaint");
 
-        DBCollection coll = db.getCollection("Players");
+        DBCollection coll = db.getCollection("HerokuDB");
 
         DBCursor cursor = coll.find();
         int i = 1;
@@ -99,7 +99,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
 
         DB db = client.getDB("arsw-projectmoveandpaint");
 
-        DBCollection coll = db.getCollection("Players");
+        DBCollection coll = db.getCollection("HerokuDB");
 
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.put("name", username);
@@ -127,7 +127,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
 
         DB db = client.getDB("arsw-projectmoveandpaint");
 
-        DBCollection coll = db.getCollection("Players");
+        DBCollection coll = db.getCollection("HerokuDB");
 
         BasicDBObject newDocument = new BasicDBObject();
         newDocument.append("$set", new BasicDBObject().append("isPlaying", b));
