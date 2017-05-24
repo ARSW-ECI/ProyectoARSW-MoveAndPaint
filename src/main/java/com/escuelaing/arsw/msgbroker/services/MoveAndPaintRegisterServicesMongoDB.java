@@ -4,8 +4,6 @@ import com.escuelaing.arsw.msgbroker.controllers.MoveAndPaintRESTController;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.security.HashSalt;
 import com.escuelaing.arsw.msgbroker.security.PasswordUtil;
-import com.google.gson.Gson;
-import com.mongodb.BasicDBList;
 import java.util.Set;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -14,11 +12,8 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,6 +22,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegisterServices {
+    
+    final static Logger logger = Logger.getLogger(MoveAndPaintRESTController.class);
 
     @Override
     public void registerPlayer(Jugador jugadorMovePaint) throws ServicesException {
@@ -46,8 +43,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
         DBCursor cursor = coll.find(whereQuery);
 
         while (cursor.hasNext()) {
-            Exception e = new ServicesException("Player found!");
-            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+            throw new ServicesException("Player found!");
         }
 
         String pass = jugadorMovePaint.getPass();
@@ -57,10 +53,8 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
             jugadorMovePaint.setPass(hs.getHash());
             jugadorMovePaint.setSalt(hs.getSalt());
         } catch (Exception ex) {
-            Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServicesException(ex.getLocalizedMessage());
         }
-
-        Gson gson = new Gson();
 
         BasicDBObject doc = new BasicDBObject("posX", jugadorMovePaint.getPosX()).append("posY", jugadorMovePaint.getPosY()).append("puntajeAcumulado", jugadorMovePaint.getPuntajeAcumulado())
                 .append("color", jugadorMovePaint.getColor()).append("name", jugadorMovePaint.getName()).append("email", jugadorMovePaint.getEmail()).append("isPlaying", jugadorMovePaint.getIsPlaying()).append("pass", jugadorMovePaint.getPass()).append("salt", jugadorMovePaint.getSalt());
@@ -117,9 +111,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
             return new Jugador(Integer.parseInt(getPlayer.get("posX").toString()), Integer.parseInt(getPlayer.get("posY").toString()), getPlayer.get("color").toString(), getPlayer.get("name").toString(), getPlayer.get("email").toString(), Boolean.parseBoolean(getPlayer.get("isPlaying").toString()), getPlayer.get("pass").toString(), getPlayer.get("salt").toString());
         }
         
-        Exception e= new ServicesException("Player not found!");
-        Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
-        return null;
+        throw new ServicesException("Player not found!");
     }
 
     @Override
@@ -147,17 +139,7 @@ public class MoveAndPaintRegisterServicesMongoDB implements MoveAndPaintRegister
     }
 
     public MoveAndPaintRegisterServicesMongoDB() throws Exception {
-//        HashSalt hs = PasswordUtil.getHash("asd");
-//        String pass = hs.getHash();
-//        Jugador j1 = new Jugador(0, 0, "image", "ricardo", "ricardo@mail.com", false, pass, hs.getSalt());
-//        Jugador j2 = new Jugador(10, 0, "asd", "carlos", "carlos@mail.com", false, pass, hs.getSalt());
-//
-//        try {
-//            registerPlayer(j1);
-//            registerPlayer(j2);
-//        } catch (ServicesException ex) {
-//            Logger.getLogger(MoveAndPaintRegisterServicesMongoDB.class.getName()).log(Level.SEVERE, null, ex.getMessage());
-//        }
+
     }
 
 }

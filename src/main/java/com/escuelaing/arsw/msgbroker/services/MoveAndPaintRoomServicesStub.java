@@ -12,8 +12,7 @@ import com.escuelaing.arsw.msgbroker.model.Room;
 import com.escuelaing.arsw.msgbroker.security.*;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,15 +56,13 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
                 hs = PasswordUtil.getHash(player.getPass() + sal);
                 isValid = PasswordUtil.ValidatePass(passNueva, passVerdadera, sal);
             } catch (Exception ex) {
-                Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, ex);
+                throw new ServicesException(ex.getLocalizedMessage());
             }
             if (roomGame.get(idRoom).getPlayers().size() < MAX_PLAYERS) {
                 if (!isValid) {
-                    Exception e = new ServicesException("Incorrect password");
-                    Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+                    throw new ServicesException("Incorrect password");
                 } else if (roomGame.get(idRoom).getPlayers().contains(player) || player.getIsPlaying()) {
-                    Exception e = new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
-                    Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+                    throw new ServicesException("Player " + player.getName() + " already registered in room " + idRoom);
                 } else {
                     player.setPosX(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[0]));
                     player.setPosY(Integer.parseInt(posiciones[roomGame.get(idRoom).getActual() % 7].split(" ")[1]));
@@ -89,7 +86,7 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServicesException(ex.getLocalizedMessage());
         }
         synchronized (roomGame.get(idRoom)) {
             for (Jugador player : roomGame.get(idRoom).getPlayers()) {
@@ -97,9 +94,7 @@ public class MoveAndPaintRoomServicesStub implements MoveAndPaintRoomServices {
                     return player;
                 }
             }
-            Exception e = new ServicesException("Room #" + idRoom + " doesnt contain player");
-            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
-            return null;
+            throw new ServicesException("Room #" + idRoom + " doesnt contain player");
         }
 
     }

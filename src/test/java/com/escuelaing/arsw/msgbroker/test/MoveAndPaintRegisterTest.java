@@ -1,19 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.escuelaing.arsw.msgbroker.test;
 
-import ch.qos.logback.core.CoreConstants;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.security.HashSalt;
 import com.escuelaing.arsw.msgbroker.security.PasswordUtil;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRegisterServices;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRegisterServicesStub;
 import com.escuelaing.arsw.msgbroker.services.ServicesException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +24,8 @@ import org.junit.Test;
  *
  */
 public class MoveAndPaintRegisterTest {
+    
+    final static Logger logger = Logger.getLogger(MoveAndPaintRegisterTest.class);
     private MoveAndPaintRegisterServices registerTest;
     
     @Before
@@ -49,11 +44,11 @@ public class MoveAndPaintRegisterTest {
             registerTest.registerPlayer(j1);
             registerTest.registerPlayer(j2);
         } catch (ServicesException ex) {
-            Logger.getLogger(MoveAndPaintRegisterTest.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            logger.error(ex);
         }
-        assertEquals("Deberian haber 4 jugadores registrados", registerTest.getPlayersRegistered().size(), registerTest.getPlayersRegistered().size());
-        registerTest.registerPlayer(j3);
         assertEquals("Deberian haber 5 jugadores registrados", registerTest.getPlayersRegistered().size(), registerTest.getPlayersRegistered().size());
+        registerTest.registerPlayer(j3);
+        assertEquals("Deberian haber 6 jugadores registrados", registerTest.getPlayersRegistered().size(), registerTest.getPlayersRegistered().size());
 
     }
 }

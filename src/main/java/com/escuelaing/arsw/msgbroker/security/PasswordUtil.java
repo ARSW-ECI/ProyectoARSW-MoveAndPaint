@@ -11,8 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
@@ -21,7 +20,10 @@ import javax.crypto.spec.PBEKeySpec;
  * @author ricar
  */
 public class PasswordUtil {
+    
     private static final Random random = new Random();
+    
+    final static Logger logger = Logger.getLogger(MoveAndPaintRESTController.class);
 	
     /**
      * Obtiene el hash y la sal a partir de una contraseña 
@@ -41,14 +43,14 @@ public class PasswordUtil {
 	    return new HashSalt(enc.encodeToString(hash), enc.encodeToString(salt));
 	}
 	catch(NoSuchAlgorithmException e) {
-	    System.out.println(e.getMessage());
+	    logger.debug(e);
 	}
 	catch (InvalidKeySpecException e) {
-	    System.out.println(e.getMessage());
+	    logger.debug(e);
 	}
 		
 	Exception e= new Exception("No se pudo crear hash");
-        Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+        logger.debug(e);
         return null;
     }
 	
@@ -69,10 +71,10 @@ public class PasswordUtil {
 	    return currentHash.equals(stringHash);
 	}
 	catch(NoSuchAlgorithmException e) {
-	    System.out.println(e.getMessage());
+	    logger.debug(e);
 	}
 	catch (InvalidKeySpecException e) {
-	    System.out.println(e.getMessage());
+	    logger.debug(e);
 	}
 	
 	return false;

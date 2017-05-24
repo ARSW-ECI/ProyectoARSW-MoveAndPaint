@@ -3,8 +3,7 @@ package com.escuelaing.arsw.msgbroker.controllers;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.services.MoveAndPaintRoomServices;
 import com.escuelaing.arsw.msgbroker.services.ServicesException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/otros")
 public class MoveAndPaintRESTRoomController {
 
+    final static Logger logger = Logger.getLogger(MoveAndPaintRESTController.class);
+    
     @Autowired
     MoveAndPaintRoomServices services;
 
@@ -30,7 +31,7 @@ public class MoveAndPaintRESTRoomController {
         try {
             return new ResponseEntity<>(services.getJugador(idRoom, username), HttpStatus.ACCEPTED);
         } catch (ServicesException ex) {
-            Logger.getLogger(MoveAndPaintRESTRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -40,7 +41,7 @@ public class MoveAndPaintRESTRoomController {
         try {
             return new ResponseEntity<>(services.getPlayersinRoom(idRoom), HttpStatus.ACCEPTED);
         } catch (ServicesException ex) {
-            Logger.getLogger(MoveAndPaintRESTRoomController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -48,11 +49,10 @@ public class MoveAndPaintRESTRoomController {
     @RequestMapping(path = "/{idSala}/colaboradores", method = RequestMethod.POST)
     public ResponseEntity<?> registerInRoom(@PathVariable int idSala, @RequestBody Jugador player) {
         try {
-
-
             services.registerPlayerRoom(idSala, player);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (ServicesException ex) {
+            logger.error(ex);
             return new ResponseEntity<>("Error al agregar colaborador a la sala: " + idSala, HttpStatus.NOT_FOUND);
         }
     }

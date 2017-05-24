@@ -5,14 +5,12 @@
  */
 package com.escuelaing.arsw.msgbroker.services;
 
-import com.escuelaing.arsw.msgbroker.controllers.MoveAndPaintRESTController;
 import com.escuelaing.arsw.msgbroker.model.Jugador;
 import com.escuelaing.arsw.msgbroker.security.HashSalt;
 import com.escuelaing.arsw.msgbroker.security.PasswordUtil;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -21,6 +19,8 @@ import java.util.logging.Logger;
 //@Service
 public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterServices {
 
+    final static Logger logger = Logger.getLogger(MoveAndPaintRegisterServicesStub.class);
+    
     Set<Jugador> players;
 
     public MoveAndPaintRegisterServicesStub() throws Exception {
@@ -41,7 +41,7 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
     public void registerPlayer(Jugador jugadorMovePaint) throws ServicesException {
         if (players.contains(jugadorMovePaint)) {
             Exception e= new ServicesException("Player " + jugadorMovePaint.getName() + " already registered");
-            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+            logger.error(e);
         } else {
             try {
                 String pass = jugadorMovePaint.getPass();
@@ -51,14 +51,14 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
                     jugadorMovePaint.setPass(hs.getHash());
                     jugadorMovePaint.setSalt(hs.getSalt());
                 } catch (Exception ex) {
-                    Logger.getLogger(MoveAndPaintRoomServicesStub.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error(ex);
                 }
                 players.add(jugadorMovePaint);
                 MoveAndPaintRegisterServicesMongoDB fjds = new MoveAndPaintRegisterServicesMongoDB();
                 //fjds.registerPlayer(jugadorMovePaint);
                 fjds.getPlayersRegistered();
             } catch (Exception ex) {
-                Logger.getLogger(MoveAndPaintRegisterServicesStub.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex);
             }
         }
     }
@@ -66,8 +66,8 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
     @Override
     public Set<Jugador> getPlayersRegistered() throws ServicesException {
         if (players.isEmpty()) {
-            Exception e= new ServicesException("Any player registered!!");
-            Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+            Exception ex = new ServicesException("Any player registered!!");
+            logger.error(ex);
         }
         return players;
     }
@@ -79,8 +79,8 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
                 return player;
             }
         }
-        Exception e= new ServicesException("Player not found!");
-        Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+        Exception ex = new ServicesException("Player not found!");
+        logger.error(ex);
         return null;
     }
 
@@ -91,8 +91,8 @@ public class MoveAndPaintRegisterServicesStub implements MoveAndPaintRegisterSer
                 player.setPuntajeAcumulado(player.getPuntajeAcumulado() + score);
             }
         }
-        Exception e= new ServicesException("Player not found!");
-        Logger.getLogger(MoveAndPaintRESTController.class.getName()).log(Level.SEVERE, null, e);
+        Exception ex = new ServicesException("Player not found!");
+        logger.error(ex);
     }
 
     @Override
